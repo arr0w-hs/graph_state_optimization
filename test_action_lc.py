@@ -22,11 +22,23 @@ plt.rcParams.update({'font.size': 12})
 from local_complementation import *
 
 
-G = nx.fast_gnp_random_graph(5, 0.7)
+G = nx.fast_gnp_random_graph(8, 0.7)
 G_in = G
 plt.figure()
 nx.draw_networkx(G)
 plt.draw()
+
+
+ff = nx.laplacian_spectrum(G)
+plt.figure()
+plt.hist(ff)
+
+#ff = nx.adjacency_spectrum(G)
+#plt.figure()
+#plt.hist(ff)
+
+
+print(nx.algebraic_connectivity(G), "intial ac")
 
 cl_list = []
 num_edges_list = []
@@ -44,11 +56,15 @@ while flag == 1:
     flag = 1
     if i >= 10:
         flag = 0
-
+print(nx.algebraic_connectivity(G), "lc ac")
 x = np.linspace(1, i, i)
 plt.figure()
 nx.draw_networkx(G)
 plt.draw()
+
+ff = nx.laplacian_spectrum(G)
+plt.figure()
+plt.hist(ff)
 
 plt.figure()
 plt.grid()
@@ -56,11 +72,12 @@ plt.plot(x, num_edges_list)#, s = 5, c = "blue")
 plt.ylabel('Number of edges')
 plt.xlabel("Iteration")
 
+
 #plt.figure()
 #plt.grid()
 #plt.plot(x, vert_list)#, s = 5, c = "blue")
 #plt.ylabel('vert_list')
-print(nx.average_clustering(G), "clustering")
+#print(nx.average_clustering(G), "clustering")
 
 
 G = G_in
@@ -81,10 +98,15 @@ while flag == 1:
     if i >= 10:
         flag = 0
 
-
+print(nx.algebraic_connectivity(G), "nm ac")
 plt.figure()
 nx.draw_networkx(G)
 plt.draw()
+
+ff = nx.laplacian_spectrum(G)
+plt.figure()
+plt.hist(ff)
+
 x = np.linspace(1, i, i)
 plt.figure()
 plt.grid()
@@ -94,9 +116,9 @@ plt.plot(x, num_edges_list)#, s = 5, c = "blue")
 #plt.grid()
 #plt.plot(x, vert_list)#, s = 5, c = "blue")
 #plt.ylabel('vert_list')
-print(nx.average_clustering(G), "new metric")
+#print(nx.average_clustering(G), "new metric")
 
-
+"""
 cl_list = []
 num_edges_list = []
 vert_list = []
@@ -115,7 +137,7 @@ while flag == 1:
     if i >= 10:
         flag = 0
 
-
+print(nx.algebraic_connectivity(G), "tr ac")
 plt.figure()
 nx.draw_networkx(G)
 plt.draw()
@@ -125,8 +147,9 @@ plt.grid()
 plt.plot(x, num_edges_list)#, s = 5, c = "blue")
 plt.ylabel('Number of edges')
 plt.xlabel("Iteration")
-print(nx.average_clustering(G), "triangles")
+#print(nx.average_clustering(G), "triangles")
 #plt.figure()
 #plt.grid()
 #plt.plot(x, vert_list)#, s = 5, c = "blue")
 #plt.ylabel('vert_list')
+"""
