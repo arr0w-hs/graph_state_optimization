@@ -4,6 +4,9 @@
 Created on Mon Apr  8 11:10:24 2024
 
 @author: hsharma4
+
+base functions for applying local complementation
+with greedy appraoch
 """
 import sys
 import os

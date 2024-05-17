@@ -4,6 +4,8 @@
 Created on Tue May  7 17:14:37 2024
 
 @author: hsharma4
+
+code fro the class to implement simulated annealing
 """
 
 import sys
