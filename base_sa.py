@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 plt.rcParams.update({'font.size': 12})
 
-from base_local_comp import *
+from base_lc import *
 
 class sim_annealing:
 
@@ -31,6 +31,14 @@ class sim_annealing:
         self.initial_temp = initial_temp
         #self.transition_cutoff = transition_cutoff
 
+    def local_complementation(self, graph, vert):
+        adj_mat = nx.to_numpy_array(graph)
+        row = adj_mat[vert]
+        adj_mat = (adj_mat + np.outer(row, row))
+        np.fill_diagonal(adj_mat, 0)
+        adj_mat = adj_mat%2
+
+        return nx.from_numpy_array(adj_mat)
 
     def vertex_choice(self, graph, transition_cutoff):
         """metric with multiplication of clustering with degree"""
@@ -94,7 +102,8 @@ class sim_annealing:
         ac = []
         for k in range(self.k_max):
             x_new = self.vertex_choice(g, transition_cutoff)
-            g_new = local_complementation(g, x_new)
+            #g_new = self.local_complementation(g, x_new)
+            g_new = self.local_complementation(g, x_new)
             y_new = self.energy_func(g_new, metric)
 
             dy = y_new - y
@@ -135,7 +144,9 @@ if __name__ == "__main__":
     nm_avg = []
     sa_avg = []
 
-    n = 70
+    sa_min = []
+
+    n = 50
     x = []
     k_max = 10*n
     initial_temp = 100
@@ -145,33 +156,49 @@ if __name__ == "__main__":
     for j in range(1):
 
         print(j)
-        p = 0.05*(j+1)
-        p = 0.05
+        p = 0.1*(j+1)
+        #p = 0.5
         x.append(p)
 
         edge_list = []
         nm_list = []
         sa_list = []
+        gout_list = []
         g_list = []
         G = nx.fast_gnp_random_graph(n, p)
-        for i in range(5):
-            k_max = (10+5*i)*n
-            #print(i)
+
+        nm1 = greedy(G)
+        min_nm_edge, min_nm_graph = nm1.minimisation_new_metric()
+        print(min_nm_edge)
+
+        plt.figure()
+        nx.draw_networkx(G)
+        plt.draw()
+        plt.show(block = False)
+
+        for i in range(3000):
+            #k_max = (10+5*i)*n
+            #if i %100 == 0:
+            print(i)
             sa1 = sim_annealing(G, k_max, initial_temp)
-            min_nm_edge, min_nm_graph = minimisation_new_metric(G)
             g_out, y_list, ui_list = sa1.sa("number of edges")
             #g_out, y_list, ui_list, ac = sa1.sa("connectivity")
-            print(np.min(ui_list))
-            g_list.append(G)
+            #print(np.min(ui_list))
+            if g_out.number_of_edges() < G.number_of_edges():
+                print((g_out.number_of_edges()), G.number_of_edges())
+                print(min_nm_edge)
+                gout_list.append(g_out)
+                g_list.append(G)
+            #g_list.append(G)
             edge_list.append(G.number_of_edges())
             sa_list.append((g_out.number_of_edges()))
             nm_list.append(min_nm_edge)
 
-            xx = np.linspace(0, len(y_list), len(y_list))
-            plt.figure()
-            plt.grid()
-            plt.plot(xx, y_list, xx, ui_list)
-            plt.show(block = False)
+            #xx = np.linspace(0, len(y_list), len(y_list))
+            #plt.figure()
+            #plt.grid()
+            #plt.plot(xx, y_list, xx, ui_list)
+            #plt.show(block = False)
 
 
         edge_data.append(edge_list)
@@ -182,12 +209,16 @@ if __name__ == "__main__":
         edge_avg.append(np.mean(edge_list))
         nm_avg.append(np.mean(nm_list))
         sa_avg.append(np.mean(sa_list))
-        #g_data.append(g_list)
-    print(nm_avg, sa_avg)
+        #g_data.append(g_list)#
+
+        sa_min.append(np.min(sa_list))
+    print(sa_min)
+    #print(nm_avg, sa_avg)
+    print(np.min(nm_data), np.min(sa_data))
     plt.figure()
     plt.grid()
     #plt.plot(x, num_edges_list, '-o', x, nm_list, '-o', x, sa_list, '-o')
-    plt.plot(x, edge_avg, '-o',  x, nm_avg, '-o',  x, sa_avg, '-o')
+    plt.plot(x, edge_avg, '-o',  x, nm_avg, '-o',  x, sa_min, '-o')
     plt.title("n="+str(n))
     #plt.plot(x, cl_avg, x, nm_avg, x, tr_avg, x, edge_avg)
     plt.ylabel('Number of edges')

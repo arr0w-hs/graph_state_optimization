@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 plt.rcParams.update({'font.size': 12})
 
-from base_local_comp import *
+from base_lc_old import *
 
 test = True
 err = []
