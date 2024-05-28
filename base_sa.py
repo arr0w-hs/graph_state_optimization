@@ -7,41 +7,48 @@ Created on Tue May  7 17:14:37 2024
 
 code fro the class to implement simulated annealing
 """
+from pathlib import Path
 
 import sys
 import os
 
+
 import pickle
-
-sys.path.append(os.path.dirname(__file__))
-dir_name = os.path.dirname(__file__)
-
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
+import pandas as pd
+from base_lc import Greedy as greedy
+
+sys.path.append(os.path.dirname(__file__))
+dir_name = os.path.dirname(__file__)
 plt.rcParams.update({'font.size': 12})
 
-from base_lc import *
 
-class sim_annealing:
-
+class SimAnnealing:
+    """Class for simulated annealing"""
     def  __init__(self, inp_graph, k_max, initial_temp):
         self.inp_graph = inp_graph
         self.k_max = k_max
         self.initial_temp = initial_temp
         #self.transition_cutoff = transition_cutoff
 
+
     def local_complementation(self, graph, vert):
+        """function for local complementation at vertex 'vert'"""
+
         adj_mat = nx.to_numpy_array(graph)
         row = adj_mat[vert]
-        adj_mat = (adj_mat + np.outer(row, row))
+        adj_mat = adj_mat + np.outer(row, row)
         np.fill_diagonal(adj_mat, 0)
         adj_mat = adj_mat%2
 
         return nx.from_numpy_array(adj_mat)
 
+
     def vertex_choice(self, graph, transition_cutoff):
-        """metric with multiplication of clustering with degree"""
+        """func for choosing vertex at each point of optimisation"""
+
         degree_list = [val for (node, val) in graph.degree()]
         clustering_dict = nx.clustering(graph)
         clustering_val = list(clustering_dict.values())
@@ -50,18 +57,17 @@ class sim_annealing:
         if np.sum(new_metric_val) != 0:
             new_metric_val = new_metric_val/np.sum(new_metric_val)
 
-        """find all the unique elemetns in the array
+        """
+        find all the unique elemetns in the array
         and randomly choose an element form the vertices which are
         larger than the value of cutoff_arg at that point
         """
-
         unique_elements = np.unique(new_metric_val)
         #cutoff_arg = np.ceil((1-1/transition_cutoff)*len(unique_elements))
         if self.k_max != 0:
             cutoff_arg = np.ceil((transition_cutoff/self.k_max)*len(unique_elements))
         else:
             raise Exception("k_max is 0")
-
         if cutoff_arg < len(unique_elements):
             chosen_arg = np.random.randint(cutoff_arg, len(unique_elements))
         else:
@@ -72,58 +78,58 @@ class sim_annealing:
 
         if len(vertices) == 0:
             vertices = np.flatnonzero(clustering_val == np.max(clustering_val))
-
         vertex = np.random.choice(vertices)
 
         return vertex
 
 
     def energy_func(self, graph, metric):
+        """function for calculating energy, num edges in this case"""
 
         if metric == "number of edges":
             energy = graph.number_of_edges()
-
         elif metric == "connectivity":
             energy = nx.algebraic_connectivity(graph, method='lanczos')
 
         return energy
 
 
-    def sa(self, metric):
+    def simulated_annealing(self, metric):
+        """func for implementing simulated annealing"""
+
         temp = self.initial_temp
         transition_cutoff = 1
         g_best = self.inp_graph
-        g = self.inp_graph
-        y = self.energy_func(g, metric)
+        graph = self.inp_graph
+        y = self.energy_func(graph, metric)
         y_best = y
 
-        edge_list = []
-        best_list = []
-        ac = []
+        edge_list_sa = []
+        best_list_sa = []
         for k in range(self.k_max):
-            x_new = self.vertex_choice(g, transition_cutoff)
+            x_new = self.vertex_choice(graph, transition_cutoff)
             #g_new = self.local_complementation(g, x_new)
-            g_new = self.local_complementation(g, x_new)
+            g_new = self.local_complementation(graph, x_new)
             y_new = self.energy_func(g_new, metric)
 
             dy = y_new - y
 
             if dy <= 0 or np.random.uniform(0,1,1) < np.exp(-1*dy/temp):
                 y = y_new
-                g = g_new
+                graph = g_new
 
             if y_new < y_best:
                 g_best = g_new
                 y_best = y_new
             temp = self.initial_temp*np.log(2)/(np.log(k+2))
             #temp = self.initial_temp/(k+2)
-            transition_cutoff = (k+1)
-            edge_list.append(y)
-            best_list.append(y_best)
+            transition_cutoff = k+1
+            edge_list_sa.append(y)
+            best_list_sa.append(y_best)
 
             #ac.append(nx.algebraic_connectivity(g_best, method='lanczos'))
 
-        return g_best, edge_list, best_list#, ac
+        return g_best, edge_list_sa, best_list_sa#, ac
 
 
 if __name__ == "__main__":
@@ -148,17 +154,17 @@ if __name__ == "__main__":
 
     n = 50
     x = []
-    k_max = 10*n
-    initial_temp = 100
+    max_k = 10*n
+    temp_initial = 100
     """sample size is the number of graph sampled for each (n,p)"""
     sample_size = 1000
 
-    for j in range(1):
+    for j in range(500):
 
         print(j)
-        p = 0.1*(j+1)
-        #p = 0.5
-        x.append(p)
+        #p = 0.1*(j+1)
+        p = 0.2
+        x.append(j)
 
         edge_list = []
         nm_list = []
@@ -168,20 +174,20 @@ if __name__ == "__main__":
         G = nx.fast_gnp_random_graph(n, p)
 
         nm1 = greedy(G)
-        min_nm_edge, min_nm_graph = nm1.minimisation_new_metric()
-        print(min_nm_edge)
+        min_nm_edge, min_nm_graph = nm1.greedy_minimisation()
+        #print(min_nm_edge)
 
-        plt.figure()
-        nx.draw_networkx(G)
-        plt.draw()
-        plt.show(block = False)
+        #plt.figure()
+        #nx.draw_networkx(G)
+        #plt.draw()
+        #plt.show(block = False)
 
-        for i in range(3000):
+        for i in range(1):
             #k_max = (10+5*i)*n
             #if i %100 == 0:
-            print(i)
-            sa1 = sim_annealing(G, k_max, initial_temp)
-            g_out, y_list, ui_list = sa1.sa("number of edges")
+            #print(i)
+            sa1 = SimAnnealing(G, max_k, temp_initial)
+            g_out, y_list, ui_list = sa1.simulated_annealing("number of edges")
             #g_out, y_list, ui_list, ac = sa1.sa("connectivity")
             #print(np.min(ui_list))
             if g_out.number_of_edges() < G.number_of_edges():
@@ -215,26 +221,20 @@ if __name__ == "__main__":
     print(sa_min)
     #print(nm_avg, sa_avg)
     print(np.min(nm_data), np.min(sa_data))
-    plt.figure()
-    plt.grid()
+    #plt.figure()
+    #plt.grid()
     #plt.plot(x, num_edges_list, '-o', x, nm_list, '-o', x, sa_list, '-o')
-    plt.plot(x, edge_avg, '-o',  x, nm_avg, '-o',  x, sa_min, '-o')
-    plt.title("n="+str(n))
+    #plt.plot(x, edge_avg, '-o',  x, nm_avg, '-o',  x, sa_min, '-o')
+    #plt.plot(x, edge_avg, x, nm_avg, x, sa_min)
+    #plt.title("n="+str(n))
     #plt.plot(x, cl_avg, x, nm_avg, x, tr_avg, x, edge_avg)
-    plt.ylabel('Number of edges')
-    plt.xlabel('Graph')
-    plt.legend(["Initial edges", "New metric", "Simulated annealing"])
-    #plt.savefig(plots_directory + time_str + "_n="+str(n)+"_performance" + ".png", dpi=1000, format="png", bbox_inches = 'tight')
+    #plt.ylabel('Number of edges')
+    #plt.xlabel('Graph')
+    #plt.legend(["Initial edges", "New metric", "Simulated annealing"])
+    #plt.savefig(plots_directory+time_str+"_n="+str(n)+"_performance"+".png",
+    #           dpi=1000, format="png", bbox_inches = 'tight')
 
-
-
-
-
-
-
-
-
-    print(lauda)
+    #print(lauda)
 
     data_dict = {
         "n": n,
@@ -255,11 +255,11 @@ if __name__ == "__main__":
         "sample size": sample_size,
         }
 
-    x = np.linspace(0, len(y_list), len(y_list))
-    plt.figure()
-    plt.grid()
-    plt.plot(x, y_list)
-    print(lauda)
+    #x = np.linspace(0, len(y_list), len(y_list))
+    #plt.figure()
+    #plt.grid()
+    #plt.plot(x, y_list)
+    #print(lauda)
 
     ts = pd.Timestamp.today(tz = 'Europe/Stockholm')
     date_str = str(ts.date())
@@ -286,7 +286,8 @@ if __name__ == "__main__":
     with open(data_directory+ time_str +'.pkl', 'wb') as f:  # open a text file
         pickle.dump(data_dict, f)
 
-    with open(graph_directory+ str(sample_size) + "_"+ date_str + "_" + time_str +'.pkl', 'wb') as f:  # open a text file
+    with open(graph_directory+ str(sample_size) 
+              + "_"+ date_str + "_" + time_str +'.pkl', 'wb') as f:  # open a text file
         pickle.dump(graph_dict, f)
 
     with open(data_directory + time_str +'_metadata.txt', mode="w") as f:
@@ -297,11 +298,11 @@ if __name__ == "__main__":
     plt.figure()
     plt.grid()
     #plt.plot(x, num_edges_list, '-o', x, nm_list, '-o', x, sa_list, '-o')
-    plt.plot(x, edge_avg,  x, nm_avg,  x, sa_avg)
+    plt.plot(x, edge_avg, x, nm_avg,  x, sa_min)
     plt.title("n="+str(n))
     #plt.plot(x, cl_avg, x, nm_avg, x, tr_avg, x, edge_avg)
     plt.ylabel('Number of edges')
     plt.xlabel('Graph')
     plt.legend(["Initial edges", "New metric", "Simulated annealing"])
-    #plt.savefig(plots_directory + time_str + "_n="+str(n)+"_performance" + ".png", dpi=1000, format="png", bbox_inches = 'tight')
-
+    plt.savefig(plots_directory+time_str+"_n="+str(n)+"_performance" + ".png",
+                dpi=1000, format="png", bbox_inches = 'tight')
