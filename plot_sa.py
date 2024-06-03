@@ -19,7 +19,7 @@ plt.rcParams.update({'font.size': 12})
 sys.path.append(os.path.dirname(__file__))
 dir_name = os.path.dirname(__file__)
 
-data_location = '/2024-05-14_simulated_annealing/15157'
+data_location = '/2024-05-29_simulated_annealing/11355'
 with open(dir_name+'/data'+data_location+'.pkl', 'rb') as f:
     data_dict_loaded = pickle.load(f)
     f.close()

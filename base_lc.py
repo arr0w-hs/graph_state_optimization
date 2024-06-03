@@ -97,22 +97,23 @@ class Greedy:
             num_edges_list.append(graph.number_of_edges())
             #graph, vert, flagg = self.apply_new_metric(graph)
             output  = self.apply_new_metric(graph)
+            graph = output[0]
             flagg = output[2]
             flagg_count += 1
             if flagg_count >= 30:
                 print("nm hit max")
                 flagg = 0
 
-        return np.min(num_edges_list), output[0]
+        return np.min(num_edges_list), graph#output[0]
 
 
 
 
 if __name__ == "__main__":
 
-    G = nx.fast_gnp_random_graph(10, 0.5)
+    G = nx.fast_gnp_random_graph(10, 0.8)
     print(G.number_of_edges())
-
+    
     opt = Greedy(G)
     edges, opg = opt.greedy_minimisation()
     print(edges)

@@ -5,7 +5,7 @@ Created on Tue May  7 17:14:37 2024
 
 @author: hsharma4
 
-code fro the class to implement simulated annealing
+code for the class to implement simulated annealing
 """
 from pathlib import Path
 
@@ -18,10 +18,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
 import pandas as pd
-from base_lc import Greedy as greedy
 
 sys.path.append(os.path.dirname(__file__))
 dir_name = os.path.dirname(__file__)
+from base_lc import Greedy as greedy
+
+
 plt.rcParams.update({'font.size': 12})
 
 
@@ -152,18 +154,18 @@ if __name__ == "__main__":
 
     sa_min = []
 
-    n = 50
+    n = 10
     x = []
     max_k = 10*n
     temp_initial = 100
     """sample size is the number of graph sampled for each (n,p)"""
     sample_size = 1000
 
-    for j in range(500):
+    for j in range(20):
 
         print(j)
-        #p = 0.1*(j+1)
-        p = 0.2
+        p = 0.05*(j+1)
+        #p = 0.2
         x.append(j)
 
         edge_list = []
@@ -171,10 +173,7 @@ if __name__ == "__main__":
         sa_list = []
         gout_list = []
         g_list = []
-        G = nx.fast_gnp_random_graph(n, p)
-
-        nm1 = greedy(G)
-        min_nm_edge, min_nm_graph = nm1.greedy_minimisation()
+        
         #print(min_nm_edge)
 
         #plt.figure()
@@ -182,20 +181,22 @@ if __name__ == "__main__":
         #plt.draw()
         #plt.show(block = False)
 
-        for i in range(1):
-            #k_max = (10+5*i)*n
-            #if i %100 == 0:
-            #print(i)
+        for i in range(1000):
+            G = nx.fast_gnp_random_graph(n, p)
+
+            nm1 = greedy(G)
+            min_nm_edge, min_nm_graph = nm1.greedy_minimisation()
+            
             sa1 = SimAnnealing(G, max_k, temp_initial)
             g_out, y_list, ui_list = sa1.simulated_annealing("number of edges")
             #g_out, y_list, ui_list, ac = sa1.sa("connectivity")
             #print(np.min(ui_list))
-            if g_out.number_of_edges() < G.number_of_edges():
+            """if g_out.number_of_edges() < G.number_of_edges():
                 print((g_out.number_of_edges()), G.number_of_edges())
                 print(min_nm_edge)
                 gout_list.append(g_out)
                 g_list.append(G)
-            #g_list.append(G)
+            """    
             edge_list.append(G.number_of_edges())
             sa_list.append((g_out.number_of_edges()))
             nm_list.append(min_nm_edge)
