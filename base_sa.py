@@ -123,6 +123,17 @@ class SimAnnealing:
             if y_new < y_best:
                 g_best = g_new
                 y_best = y_new
+                
+                #plt.figure()
+                #nx.draw_networkx(g_best)
+                #plt.draw()
+                #plt.show(block = False)
+            
+            #plt.figure()
+            #nx.draw_networkx(graph)
+            #plt.draw()
+            #plt.show(block = False)
+            
             temp = self.initial_temp*np.log(2)/(np.log(k+2))
             #temp = self.initial_temp/(k+2)
             transition_cutoff = k+1
@@ -161,7 +172,7 @@ if __name__ == "__main__":
     """sample size is the number of graph sampled for each (n,p)"""
     sample_size = 1000
 
-    for j in range(20):
+    for j in range(1):
 
         print(j)
         p = 0.05*(j+1)
@@ -181,8 +192,10 @@ if __name__ == "__main__":
         #plt.draw()
         #plt.show(block = False)
 
-        for i in range(1000):
-            G = nx.fast_gnp_random_graph(n, p)
+        for i in range(1):
+            #G = nx.fast_gnp_random_graph(n, p)
+            G = nx.Graph()
+            G.add_edges_from([(0, 1), (1, 6), (6, 2), (2, 3), (3, 5), (5, 0), (0, 7), (7, 1), (7, 3), (7, 2), (7, 4), (4, 6), (4, 5)])
 
             nm1 = greedy(G)
             min_nm_edge, min_nm_graph = nm1.greedy_minimisation()
@@ -256,11 +269,12 @@ if __name__ == "__main__":
         "sample size": sample_size,
         }
 
-    #x = np.linspace(0, len(y_list), len(y_list))
-    #plt.figure()
-    #plt.grid()
-    #plt.plot(x, y_list)
-    #print(lauda)
+    x = np.linspace(0, len(y_list), len(y_list))
+    plt.figure()
+    plt.grid()
+    plt.plot(x, y_list)
+    plt.plot(x, ui_list)
+    print(lauda)
 
     ts = pd.Timestamp.today(tz = 'Europe/Stockholm')
     date_str = str(ts.date())

@@ -103,6 +103,11 @@ class Greedy:
             if flagg_count >= 30:
                 print("nm hit max")
                 flagg = 0
+                
+            #plt.figure()
+            #nx.draw_networkx(graph)
+            #plt.draw()
+            #plt.show(block = False)
 
         return np.min(num_edges_list), graph#output[0]
 
