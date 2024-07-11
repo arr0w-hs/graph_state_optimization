@@ -7,27 +7,26 @@ Created on Tue May  7 17:14:37 2024
 
 code for the class to implement simulated annealing
 """
-from pathlib import Path
 
 import sys
 import os
-
 
 import pickle
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
 import pandas as pd
-
+from pathlib import Path
+from base_lc import Greedy as greedy
 sys.path.append(os.path.dirname(__file__))
 dir_name = os.path.dirname(__file__)
-from base_lc import Greedy as greedy
+
 
 
 plt.rcParams.update({'font.size': 12})
 
 
-class SimAnnealing:
+class EDM_SimAnnealing:
     """Class for simulated annealing"""
     def  __init__(self, inp_graph, k_max, initial_temp):
         self.inp_graph = inp_graph
@@ -70,6 +69,8 @@ class SimAnnealing:
             cutoff_arg = np.ceil((transition_cutoff/self.k_max)*len(unique_elements))
         else:
             raise Exception("k_max is 0")
+
+        #cutoff_arg = 0
         if cutoff_arg < len(unique_elements):
             chosen_arg = np.random.randint(cutoff_arg, len(unique_elements))
         else:
@@ -123,17 +124,17 @@ class SimAnnealing:
             if y_new < y_best:
                 g_best = g_new
                 y_best = y_new
-                
+
                 #plt.figure()
                 #nx.draw_networkx(g_best)
                 #plt.draw()
                 #plt.show(block = False)
-            
+
             #plt.figure()
             #nx.draw_networkx(graph)
             #plt.draw()
             #plt.show(block = False)
-            
+
             temp = self.initial_temp*np.log(2)/(np.log(k+2))
             #temp = self.initial_temp/(k+2)
             transition_cutoff = k+1
@@ -148,7 +149,7 @@ class SimAnnealing:
 if __name__ == "__main__":
 
     #print(lauda)
-    p = 0.3
+    p = 0.6
     cl_list = []
     edge_data = []
     vert_list = []
@@ -165,17 +166,17 @@ if __name__ == "__main__":
 
     sa_min = []
 
-    n = 10
+    n = 20
     x = []
     max_k = 10*n
     temp_initial = 100
     """sample size is the number of graph sampled for each (n,p)"""
     sample_size = 1000
-
+    G = nx.fast_gnp_random_graph(n, p)
     for j in range(1):
 
         print(j)
-        p = 0.05*(j+1)
+        #p = 0.05*(j+1)
         #p = 0.2
         x.append(j)
 
@@ -184,7 +185,7 @@ if __name__ == "__main__":
         sa_list = []
         gout_list = []
         g_list = []
-        
+
         #print(min_nm_edge)
 
         #plt.figure()
@@ -193,14 +194,14 @@ if __name__ == "__main__":
         #plt.show(block = False)
 
         for i in range(1):
-            #G = nx.fast_gnp_random_graph(n, p)
-            G = nx.Graph()
-            G.add_edges_from([(0, 1), (1, 6), (6, 2), (2, 3), (3, 5), (5, 0), (0, 7), (7, 1), (7, 3), (7, 2), (7, 4), (4, 6), (4, 5)])
+
+            #G = nx.Graph()
+            #G.add_edges_from([(0, 1), (1, 6), (6, 2), (2, 3), (3, 5), (5, 0), (0, 7), (7, 1), (7, 3), (7, 2), (7, 4), (4, 6), (4, 5)])
 
             nm1 = greedy(G)
             min_nm_edge, min_nm_graph = nm1.greedy_minimisation()
-            
-            sa1 = SimAnnealing(G, max_k, temp_initial)
+
+            sa1 = EDM_SimAnnealing(G, max_k, temp_initial)
             g_out, y_list, ui_list = sa1.simulated_annealing("number of edges")
             #g_out, y_list, ui_list, ac = sa1.sa("connectivity")
             #print(np.min(ui_list))
@@ -209,7 +210,7 @@ if __name__ == "__main__":
                 print(min_nm_edge)
                 gout_list.append(g_out)
                 g_list.append(G)
-            """    
+            """
             edge_list.append(G.number_of_edges())
             sa_list.append((g_out.number_of_edges()))
             nm_list.append(min_nm_edge)
@@ -248,7 +249,6 @@ if __name__ == "__main__":
     #plt.savefig(plots_directory+time_str+"_n="+str(n)+"_performance"+".png",
     #           dpi=1000, format="png", bbox_inches = 'tight')
 
-    #print(lauda)
 
     data_dict = {
         "n": n,
@@ -274,7 +274,7 @@ if __name__ == "__main__":
     plt.grid()
     plt.plot(x, y_list)
     plt.plot(x, ui_list)
-    print(lauda)
+    #print(stop)
 
     ts = pd.Timestamp.today(tz = 'Europe/Stockholm')
     date_str = str(ts.date())
@@ -301,7 +301,7 @@ if __name__ == "__main__":
     with open(data_directory+ time_str +'.pkl', 'wb') as f:  # open a text file
         pickle.dump(data_dict, f)
 
-    with open(graph_directory+ str(sample_size) 
+    with open(graph_directory+ str(sample_size)
               + "_"+ date_str + "_" + time_str +'.pkl', 'wb') as f:  # open a text file
         pickle.dump(graph_dict, f)
 

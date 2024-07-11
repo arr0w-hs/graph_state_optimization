@@ -19,7 +19,7 @@ plt.rcParams.update({'font.size': 12})
 sys.path.append(os.path.dirname(__file__))
 dir_name = os.path.dirname(__file__)
 
-data_location = '/2024-05-29_simulated_annealing/11355'
+data_location = '/2024-07-02_sa_ilp/18332'
 with open(dir_name+'/data'+data_location+'.pkl', 'rb') as f:
     data_dict_loaded = pickle.load(f)
     f.close()
@@ -31,7 +31,7 @@ n = data_dict_loaded["n"]
 x_axis = data_dict_loaded["prob_list"]
 edge_data = data_dict_loaded["edge_data"]
 #cl_data = data_dict_loaded["cl_data"]
-nm_data = data_dict_loaded["nm_data"]
+nm_data = data_dict_loaded["sa_ilp_data"]
 sa_data = data_dict_loaded["sa_data"]
 
 #print(())
@@ -56,11 +56,11 @@ plt.plot(x_axis, mean_edge_data,label = "Initial edges")
 plt.fill_between(x_axis, y1_edge_data, 
                  y2= y2_edge_data, alpha = 0.2, linewidth=0, label="_a")
 
-plt.plot(x_axis, mean_nm_data, label = "New metric")
+plt.plot(x_axis, mean_nm_data, label = "SA+ILP")
 plt.fill_between(x_axis, y1_nm_data, 
                  y2= y2_nm_data, alpha = 0.2,linewidth=0, label="_a")
 
-plt.plot(x_axis, mean_sa_data, label = "Simulated annealing")
+plt.plot(x_axis, mean_sa_data, label = "SA")
 plt.fill_between(x_axis, y1_sa_data, 
                  y2= y2_sa_data, alpha = 0.2,linewidth=0, label="_a")
 
@@ -72,7 +72,7 @@ plt.legend()
 
 
 
-#plt.savefig(dir_name +'/plots' + data_location + "_probability" + ".png", dpi=800, format="png", bbox_inches = 'tight')
+plt.savefig(dir_name +'/plots' + data_location + "_probability" + ".png", dpi=800, format="png", bbox_inches = 'tight')
 """
 sns.lineplot(data = nm_data[0])#, x = x_axis, y = "edge_data")
 plt.figure()
