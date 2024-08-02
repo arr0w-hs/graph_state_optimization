@@ -15,6 +15,7 @@ import pandas as pd
 import networkx as nx
 from pathlib import Path
 import time
+import psutil
 #import mosek
 
 plt.rcParams.update({'font.size': 12})
@@ -26,26 +27,28 @@ from edm_ilp import ilp_minimize_edges
 
 
 def edm_sa_ilp(G_in, k_max, temp):
-    
+
     time1 = time.time()
     sa1 = SimAnnealing(G_in, k_max, temp)
-    G_sa, y_list, ui_list = sa1.simulated_annealing("number of edges")
+    G_sa, y_list, _ = sa1.simulated_annealing("number of edges")
     sa_edges = (G_sa.number_of_edges())
-    
+
     # print(len(G.edges()))
-    G_final, sa_ilp_edges = ilp_minimize_edges(G_sa, draw=False)
-    
+    G_final, sa_ilp_edges, ilp_runtime = ilp_minimize_edges(G_sa, draw=False)
+
     time2 = time.time()
-    return G_final, G_sa, sa_edges, sa_ilp_edges, time2-time1
+
+    sa_ilp_runtime = time2-time1
+    return G_final, G_sa, sa_edges, sa_ilp_edges, sa_ilp_runtime, ilp_runtime
 
 
 if __name__ == "__main__":
-    
+
     p = 0.6
     cl_list = []
     edge_data = []
     vert_list = []
-    
+
     sa_ilp_data = []
     sa_data = []
     g_data = []
@@ -61,19 +64,19 @@ if __name__ == "__main__":
 
     sa_min = []
 
-    n = 10
+    n = 7
     p_list = []
     max_k = 10*n
     temp_initial = 100
     """sample size is the number of graph sampled for each (n,p)"""
     sample_size = 1
-    
-    
+
+
     for j in range(2):
-        
+
         #print(j)
         #p = 0.05*(j+1)
-        p = 0.1*(j+1)
+        p = 0.1*(j+5)
         p_list.append(p)
 
         edge_list = []
@@ -82,29 +85,29 @@ if __name__ == "__main__":
         gout_list = []
         g_list = []
         runtime_list = []
-        
+
         flag = 1
         for i in range(sample_size):
             #print(i)
-            
+
             #if !nx.is_connected(G):
             #    continue
             #while flag = 1:
             G = nx.erdos_renyi_graph(n, p)
             output = edm_sa_ilp(G, max_k, temp_initial)
-            
+
             print(j, i, output[2], output[3])
             #print()
             #print(output[4])
-            
+
             edge_list.append(G.number_of_edges())
-            
+
             g_list.append(G)
             gout_list.append(output[0])
             sa_list.append(output[2])
             sa_ilp_list.append(output[3])
             runtime_list.append(output[4])
-
+            print('The CPU usage is: ', psutil.cpu_percent(400))
 
         edge_data.append(edge_list)
         sa_ilp_data.append(sa_ilp_list)
@@ -112,11 +115,11 @@ if __name__ == "__main__":
         g_data.append(g_list)
         gout_data.append(gout_list)
         runtime_data.append(runtime_list)
-        
+
         edge_avg.append(np.mean(edge_list))
         sa_ilp_avg.append(np.mean(sa_ilp_list))
         sa_avg.append(np.mean(sa_list))
-        
+
 
     data_dict = {
         "n": n,
@@ -188,4 +191,3 @@ if __name__ == "__main__":
     #plt.savefig(plots_directory+time_str+"_n="+str(n)+"_performance" + ".png",
     #            dpi=1000, format="png", bbox_inches = 'tight')
     """
-    

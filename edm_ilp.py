@@ -92,12 +92,15 @@ def reconstruct_thetap(thetap, n):
 
 
 def ilp_minimize_edges(input_G, draw=False):
+    time1 = time.time()
     if draw:
         print("Plotting input graph")
         positions = nx.spring_layout(input_G)
         nx.draw(input_G, pos=positions)
         plt.show()
 
+    max_edges = input_G.number_of_edges()
+    min_edges = input_G.number_of_nodes()-1
     theta = nx.adjacency_matrix(input_G)
     theta = np.asarray(theta.todense())
 
@@ -116,7 +119,8 @@ def ilp_minimize_edges(input_G, draw=False):
     constraints_type2 = []  # constraints from linearizing eq (4) constraints
     constraints_type3 = []  # constraints from eq (5) from van den nest
     constraints_type4 = []  # constraints from linearizing eq (5) constraints
-
+    constraints_type5 = []  # limiting the max number of edges
+    constraints_type6 = []
     # set constraints of type 1 and 2
     for j in range(0, n):  # using zero indexing here, contrary to van den nest
         for k in range(0, n):
@@ -145,11 +149,13 @@ def ilp_minimize_edges(input_G, draw=False):
         constraints_type4 += ad_constraints
         constraints_type4 += bc_constraints
 
+    constraints_type5.append(num_edges <= max_edges)
+    #constraints_type6.append(min_edges <= num_edges)
     # attempt to solve
     problem = cvx.Problem(cvx.Minimize(num_edges), [*constraints_type1, *constraints_type2,
-                                                    *constraints_type3, *constraints_type4])
+                                                    *constraints_type3, *constraints_type4,])#*constraints_type5])
 
-    problem.solve()
+    problem.solve(solver='MOSEK', mosek_params={'MSK_IPAR_MIO_HEURISTIC_LEVEL': 1})
     if problem.status != "optimal":
         print(problem.status)
 
@@ -159,7 +165,9 @@ def ilp_minimize_edges(input_G, draw=False):
         print("Plotting output graph")
         nx.draw(G, pos=positions)
         plt.show()
-    return G, problem.value
+
+    time2 = time.time()
+    return G, problem.value, time2-time1
 
 
 #
