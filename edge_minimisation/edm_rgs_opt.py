@@ -15,7 +15,7 @@ from pathlib import Path
 #os.chdir(dir_name)
 sys.path.append('..')
 
-
+import time as time
 import matplotlib.pyplot as plt
 import networkx as nx
 sys.path.append(os.path.dirname(__file__))
@@ -23,9 +23,11 @@ dir_name = os.path.dirname(__file__)
 #from base_lc import Greedy as greedy
 #from base_sa import SimAnnealing as sa
 
-from optimizer.edm_ilp import ilp_minimize_edges
+#from optimizer.edm_ilp import ilp_minimize_edges
 from optimizer.edm_sa_ilp import edm_sa_ilp
 from optimizer.edm_sa import EDM_SimAnnealing as sa
+from optimizer.ILP_minimize_edges import minimize_edges as ilp_minimize_edges
+
 
 l1 = []
 l2 = []
@@ -89,7 +91,7 @@ for i in range(1):
     
     #pos = nx.spectral_layout(G)#, list(range(n)))
     
-    
+    G = rgs_graph(6)
     
     print(G.number_of_edges())
     plt.figure()
@@ -103,30 +105,33 @@ for i in range(1):
     #edges, opg = opt.greedy_minimisation()
     
     #l2.append(edges)
-    #output1 = ilp_minimize_edges(G)
-    output = edm_sa_ilp(G, 100, 100)
+    time1 = time.time()
+    output1  = ilp_minimize_edges(G)
+    print(time.time()-time1)
+    print(output1[1])
+    #output = edm_sa_ilp(G, 100, 100)
     #sa1 = sa(G, 100, 100)
     #g_out, y_list, ui_list = sa1.simulated_annealing("number of edges")
     
-    #G = output1[0]
-    #plt.figure()
-    #nx.draw(G, pos=pos)
-    #plt.show()
-    
-    
-    #print(g_out.number_of_edges())
-    l3.append(output[3])
-    print(output[3])
-    #print(g_out.number_of_edges())
+    G = output1[0]
     plt.figure()
+    nx.draw_networkx(G)#, pos=pos)
+    plt.show()
+
+    
+    #print(g_out.number_of_edges())
+    #l3.append(output[3])
+    #print(output[3])
+    #print(g_out.number_of_edges())
+    #plt.figure()
     #nx.draw_networkx(g_out)
-    nx.draw_networkx(output[0])#, pos = pos)
-    plt.draw()
+    #nx.draw_networkx(output[0])#, pos = pos)
+    #plt.draw()
     
     #plt.figure()
     #nx.draw_networkx(output1[0])
     #plt.draw()
-    print("-----", str(output[4]), "seconds -----")
+    #print("-----", str(output[4]), "seconds -----")
 #x = np.asarray(x)
 #print(g_out.number_of_edges())
 #plt.figure()

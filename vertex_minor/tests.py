@@ -7,7 +7,7 @@ from pathlib import Path
 #os.chdir(dir_name)
 sys.path.append('..')
 
-from graphs import get_graph_dict, LC
+from vertex_minor.graphs import get_graph_dict, LC
 from optimizer.gsc.is_lc_equiv import are_lc_equiv
 from optimizer.ILP_minimize_edges import minimize_edges
 import networkx as nx
@@ -18,6 +18,7 @@ import pickle
 
 
 def test_LC_min():
+    print("dsdfsg")
     G_dict = get_graph_dict()
     for i, G in enumerate(G_dict.values()):
         verts = list(G)

@@ -42,18 +42,37 @@ warnings.simplefilter(action='ignore', category=FutureWarning)  # this is called
 #     return e, [constraint1, constraint2, constraint3, constraint4]
 
 
+# def linearize(e1, e2):
+#     # if False:
+#     #     pass
+#     #print("jj")
+#     if type(e1) is int or type(e2) is int:
+#         if type(e1) is int and e1 == 0:
+#             return 0, []
+#         elif type(e2) is int and e2 == 0:
+#             return 0, []
+#         elif type(e1) is int and e1 == 1:
+#             return e2, []
+#         elif type(e2) is int and e2 == 1:
+#             return e1, []
+#     else:
+#         e = cvx.Variable(1, boolean=True)
+#         constraint1 = (e <= e1)
+#         constraint2 = (e <= e2)
+#         constraint3 = (e >= e1 + e2 - 1)
+#         constraint4 = (e >= 0)
+#         return e, [constraint1, constraint2, constraint3, constraint4]
+
 def linearize(e1, e2):
     # if False:
     #     pass
+    #print("jj")
     if type(e1) is int or type(e2) is int:
-        if type(e1) is int and e1 == 0:
-            return 0, []
-        elif type(e2) is int and e2 == 0:
-            return 0, []
-        elif type(e1) is int and e1 == 1:
-            return e2, []
-        elif type(e2) is int and e2 == 1:
-            return e1, []
+        return e2*e1, []
+
+    #elif type(e2) is int:
+    #    return e2*e1, []
+
     else:
         e = cvx.Variable(1, boolean=True)
         constraint1 = (e <= e1)
