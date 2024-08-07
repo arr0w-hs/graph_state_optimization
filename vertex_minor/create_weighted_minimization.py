@@ -1,4 +1,4 @@
-from ILP_minimize_edges import minimize_edges
+from optimizer.ILP_minimize_edges import minimize_edges
 import networkx as nx
 import matplotlib.pyplot as plt
 
@@ -57,7 +57,7 @@ def create_network():
                       (0, 5),
                       (3, 5)])
 
-    W = nx.to_numpy_matrix(network)
+    W = nx.to_numpy_array(network)
     W[W==0] = 999
 
     H, num_edges = minimize_edges(G, W=W, draw=False)

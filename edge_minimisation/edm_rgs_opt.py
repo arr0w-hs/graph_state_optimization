@@ -11,8 +11,8 @@ uncomment the edge lists to create the graphs
 import sys
 import os
 from pathlib import Path
-dir_name = os.path.dirname(__file__)
-os.chdir(dir_name)
+#dir_name = os.path.dirname(__file__)
+#os.chdir(dir_name)
 sys.path.append('..')
 
 
@@ -23,9 +23,9 @@ dir_name = os.path.dirname(__file__)
 #from base_lc import Greedy as greedy
 #from base_sa import SimAnnealing as sa
 
-from utils.edm_ilp import ilp_minimize_edges
-from utils.edm_sa_ilp import edm_sa_ilp
-from utils.edm_sa import EDM_SimAnnealing as sa
+from optimizer.edm_ilp import ilp_minimize_edges
+from optimizer.edm_sa_ilp import edm_sa_ilp
+from optimizer.edm_sa import EDM_SimAnnealing as sa
 
 l1 = []
 l2 = []
@@ -39,12 +39,12 @@ x = []
 #    G.add_edge(i, n+i)
 G = nx.Graph()
 """graph 1  uncomment the lines below to generate the graph"""
-#G.add_edges_from([(0, 4), (0, 5), (0, 7), (1, 3), (1, 4), (1, 5), (2, 3), (2, 5), (2, 7), (3, 6), (4, 6), (6, 7)])
+G.add_edges_from([(0, 4), (0, 5), (0, 7), (1, 3), (1, 4), (1, 5), (2, 3), (2, 5), (2, 7), (3, 6), (4, 6), (6, 7)])
 """graph 2"""
 #G.add_edges_from([(0, 1), (1, 6), (6, 2), (2, 3), (3, 5), (5, 0), (0, 7), (7, 1), (7, 3), (7, 2), (7, 4), (4, 6), (4, 5)])
 """graph 3"""
-G.add_edges_from([(0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 8), (0, 10), (1, 2), (1, 5), (1, 8), (1, 9), (2, 5), (2, 7), (3, 4), (3, 5), (3, 6), (3, 9), (4, 5),
-(4, 7), (4, 10), (6, 7), (6, 8), (6, 9), (7, 10), (8, 9), (9, 10)])
+#G.add_edges_from([(0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 8), (0, 10), (1, 2), (1, 5), (1, 8), (1, 9), (2, 5), (2, 7), (3, 4), (3, 5), (3, 6), (3, 9), (4, 5),
+#(4, 7), (4, 10), (6, 7), (6, 8), (6, 9), (7, 10), (8, 9), (9, 10)])
 """MER has 23 edges"""
 
 """graph 4"""

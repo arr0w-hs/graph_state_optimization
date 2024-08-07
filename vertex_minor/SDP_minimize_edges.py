@@ -1,11 +1,18 @@
+import sys
+import os
+from pathlib import Path
+#dir_name = os.path.dirname(__file__)
+#os.chdir(dir_name)
+sys.path.append('..')
+
 import cvxpy as cvx
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
 import warnings
 from random import choice
-from graphs import get_graph_dict, LC
-from ILP_minimize_edges import reconstruct_thetap, minimize_edges
+from vertex_minor.graphs import get_graph_dict, LC
+from optimizer.ILP_minimize_edges import reconstruct_thetap, minimize_edges
 import time
 warnings.simplefilter(action='ignore', category=FutureWarning)  # this is called to suppress an annoying warning from networkx when running a version < 3.0
 
@@ -116,8 +123,8 @@ def minimize_edges_SDP(input_G, draw=False):
 if __name__ == "__main__":
     G_dict = get_graph_dict()
 
-    for _ in range(10):
-        G = nx.complete_graph(10)
+    for _ in range(1):
+        G = nx.complete_graph(5)
         verts = list(G)
         num_edges_input = len(G.edges())
         time1 = time.time()

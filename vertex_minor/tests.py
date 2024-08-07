@@ -1,12 +1,19 @@
 # todo: create better test environment
 
+import sys
+import os
+from pathlib import Path
+#dir_name = os.path.dirname(__file__)
+#os.chdir(dir_name)
+sys.path.append('..')
+
 from graphs import get_graph_dict, LC
-from is_lc_equiv import are_lc_equiv
-from ILP_minimize_edges import minimize_edges
+from optimizer.gsc.is_lc_equiv import are_lc_equiv
+from optimizer.ILP_minimize_edges import minimize_edges
 import networkx as nx
 import matplotlib.pyplot as plt
 from random import choice
-from SDP_minimize_edges import minimize_edges_SDP
+from vertex_minor.SDP_minimize_edges import minimize_edges_SDP
 import pickle
 
 

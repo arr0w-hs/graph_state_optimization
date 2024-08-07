@@ -1,17 +1,21 @@
-
-import os
 import sys
+import os
+from pathlib import Path
+#dir_name = os.path.dirname(__file__)
+#os.chdir(dir_name)
+sys.path.append('..')
+
 import cvxpy as cvx
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
 import warnings
 import time
-sys.path.append(os.path.dirname(__file__))
-dir_name = os.path.dirname(__file__)
 
-from is_lc_equiv import are_lc_equiv
-from ILP_minimize_edges import linearize
+
+from optimizer.gsc.is_lc_equiv import are_lc_equiv
+from optimizer.ILP_minimize_edges import linearize
+
 warnings.simplefilter(action='ignore', category=FutureWarning)  # this is called to suppress an annoying warning from networkx when running a version < 3.0
 
 def create_VM_color_map(G, H):
@@ -157,11 +161,11 @@ def has_VM(input_G, H, draw=False, check_LC=False):
 
 
 if __name__ == "__main__":
-    n = 12
+    n = 5
     p = 0.6
 
     times = 0
-    N = 10
+    N = 1
     for _ in range(N):
         time1 = time.time()
         G = nx.erdos_renyi_graph(n, p)

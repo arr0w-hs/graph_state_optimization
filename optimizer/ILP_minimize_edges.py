@@ -1,6 +1,10 @@
-
-import os
 import sys
+import os
+from pathlib import Path
+#dir_name = os.path.dirname(__file__)
+#os.chdir(dir_name)
+sys.path.append('..')
+
 import cvxpy as cvx
 import random
 import numpy as np
@@ -300,7 +304,7 @@ if __name__ == "__main__":
         # G = nx.complete_graph(10)
         # # print(len(G.edges()))
         # G, num_edges = minimize_edges(G, draw=False)
-        has_VM(G, [0, 1, 2, 3,4], False, True)
+        #has_VM(G, [0, 1, 2, 3,4], False, True)
         # print(num_edges)
         time2 = time.time()
         times.append(time2-time1)

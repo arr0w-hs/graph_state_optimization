@@ -22,8 +22,8 @@ plt.rcParams.update({'font.size': 12})
 sys.path.append(os.path.dirname(__file__))
 dir_name = os.path.dirname(__file__)
 
-from utils.edm_sa_ilp import edm_sa_ilp
-from utils.edm_ilp import ilp_minimize_edges
+from optimizer.edm_sa_ilp import edm_sa_ilp
+from optimizer.edm_ilp import ilp_minimize_edges
 
 parser = argparse.ArgumentParser(description="Set probability value")
 parser.add_argument("--i", type=int, help="index of probability list")

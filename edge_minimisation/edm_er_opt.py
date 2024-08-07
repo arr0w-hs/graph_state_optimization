@@ -10,8 +10,8 @@ code for analysing edge_minimisation on ER graphs
 import sys
 import os
 from pathlib import Path
-dir_name = os.path.dirname(__file__)
-os.chdir(dir_name)
+#dir_name = os.path.dirname(__file__)
+#os.chdir(dir_name)
 sys.path.append('..')
 
 import pickle
@@ -20,8 +20,8 @@ import pandas as pd
 sys.path.append(os.path.dirname(__file__))
 dir_name = os.path.dirname(__file__)
 
-from utils.edm_sa_ilp import edm_sa_ilp
-#from utils.edm_ilp import ilp_minimize_edges
+from optimizer.edm_sa_ilp import edm_sa_ilp
+#from optimizer.edm_ilp import ilp_minimize_edges
 
 
 """importing the generated bounded deg graphs"""
