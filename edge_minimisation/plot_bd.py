@@ -13,6 +13,7 @@ import pickle
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
+import numpy as np
 
 plt.rcParams.update({'font.size': 12})
 sys.path.append(os.path.dirname(__file__))
@@ -34,11 +35,12 @@ for root, _, files in os.walk(data_dir):
         df_list.append(out_df)
 
 out_df = pd.concat(df_list, axis=0, join='outer', ignore_index=True)
-
+#print(out_df)
 wide = out_df.groupby(['vertex_num'],as_index=False).mean()
 std = out_df.groupby(['vertex_num'],as_index=False).std()
 max_df = out_df.groupby(['vertex_num'],as_index=False).max()
 min_df = out_df.groupby(['vertex_num'],as_index=False).min()
+#print(wide)
 
 """
     %%%%%%%%%%%%%%%%%%% fig %%%%%%%%%%%%%%%%%%%
@@ -62,8 +64,8 @@ plt.fill_between(wide['vertex_num'],
 plt.xlabel("Number of vertices")
 plt.ylabel("Edges")
 plt.legend()
-#plt.savefig(plot_dir + "/catplot_withline" + ".svg", dpi=800, format="svg", bbox_inches = 'tight')
-#plt.savefig(plot_dir + "/catplot_withline" + ".png", dpi=800, format="png", bbox_inches = 'tight')
+#plt.savefig(plot_dir + "/edge_with_band" + ".svg", dpi=800, format="svg", bbox_inches = 'tight')
+#plt.savefig(plot_dir + "/edge_with_band" + ".png", dpi=800, format="png", bbox_inches = 'tight')
 
 """
     %%%%%%%%%%%%%%%%%%% fig %%%%%%%%%%%%%%%%%%%
@@ -83,5 +85,14 @@ plt.yscale("log")
 plt.xlabel("Number of vertices")
 plt.ylabel("Runtime (seconds)")
 plt.tight_layout()
-#plt.savefig(plot_dir + "/edge_with_band" + ".svg", dpi=800, format="svg", bbox_inches = 'tight')
-#plt.savefig(plot_dir + "/edge_with_band" + ".png", dpi=800, format="png", bbox_inches = 'tight')
+#plt.savefig(plot_dir + "/catplot_withline" + ".svg", dpi=800, format="svg", bbox_inches = 'tight')
+#plt.savefig(plot_dir + "/catplot_withline" + ".png", dpi=800, format="png", bbox_inches = 'tight')
+
+
+rt_array = out_df[["ILP"]].to_numpy().flatten()
+#rt_array = out_df[["sa_edge"]].to_numpy().flatten()
+#rt_array = np.log(rt_array)
+sa_array = out_df[["edge"]].to_numpy().flatten()
+#print(rt_array)
+#print(sa_array)
+print(np.corrcoef(rt_array,sa_array))

@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import warnings
 import time
 
-from utils.edm_sa import EDM_SimAnnealing as SimAnnealing
+from optimizer.edm_sa import EDM_SimAnnealing as SimAnnealing
 warnings.simplefilter(action='ignore', category=FutureWarning)  # this is called to suppress an annoying warning from networkx when running a version < 3.0
 
 #

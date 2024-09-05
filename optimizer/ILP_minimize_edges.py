@@ -64,15 +64,8 @@ warnings.simplefilter(action='ignore', category=FutureWarning)  # this is called
 #         return e, [constraint1, constraint2, constraint3, constraint4]
 
 def linearize(e1, e2):
-    # if False:
-    #     pass
-    #print("jj")
     if type(e1) is int or type(e2) is int:
         return e2*e1, []
-
-    #elif type(e2) is int:
-    #    return e2*e1, []
-
     else:
         e = cvx.Variable(1, boolean=True)
         constraint1 = (e <= e1)

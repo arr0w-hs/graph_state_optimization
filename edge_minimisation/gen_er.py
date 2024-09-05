@@ -32,7 +32,7 @@ def create_er(sample_size, n, num_points):
     inputs:
         sample size: the number of graphs requested
         n: is the number of vertices in the graphs
-        num_points: is the number of points in the porbability
+        num_points: is the number of points in the probability from 0 to 1
 
     outputs: a pickle file with a dictionary with graphs and a corresponding
             list of probabilites
