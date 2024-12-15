@@ -3,14 +3,14 @@ import os
 import sys
 import csv
 import json
-import pynauty as pyn
+#import pynauty as pyn
 import networkx as nx
 import itertools as it
 from pprint import pprint
 from networkx.readwrite import json_graph
 # Local modules
 from gsc.utils import *
-from gsc.get_nauty import find_rep_nodes, hash_graph
+#from gsc.get_nauty import find_rep_nodes, hash_graph
 
 
 def init_EC_database_dir(directory='EC_database'):
@@ -321,7 +321,7 @@ if __name__ == '__main__':
     filename = 'qutrit_ring_class_graph'
     class_graph_data = \
         export_class_graph(class_graph, filename, min_edge_reps=True)
-    print class_graph_data
+    print(class_graph_data)
     # pprint(class_graph_data)
 
     # prime = 3

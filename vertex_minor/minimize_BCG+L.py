@@ -1,8 +1,8 @@
-from ILP_minimize_edges import minimize_edges
-from is_lc_equiv import are_lc_equiv
+#from ILP_minimize_edges import minimize_edges
+from optimizer.gsc.is_lc_equiv import are_lc_equiv
 import networkx as nx
 import matplotlib.pyplot as plt
-
+from optimizer.edm_sa import EDM_SimAnnealing as SimAnnealing
 
 def minimize_BCGL(n1, n2, leaves, check=False, random=False):
     G = nx.complete_bipartite_graph(n1, n2)
@@ -19,7 +19,11 @@ def minimize_BCGL(n1, n2, leaves, check=False, random=False):
     # nx.draw(G, pos=pos)
     # plt.show()
 
-    G2, num_edges = minimize_edges(G)
+    #G2, num_edges = minimize_edges(G)
+
+    sa1 = SimAnnealing(G, 100, 100)
+    G2, _, _ = sa1.simulated_annealing("number of edges")
+
     print("Output number of edges: ", len(G2.edges()))
     G2 = nx.relabel_nodes(G2, {i+n1+n2: str(i) + "_l" for i in range(n1+n2)})
     nx.draw(G2, pos=pos, with_labels=True)
