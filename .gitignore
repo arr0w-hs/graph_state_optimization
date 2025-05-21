@@ -1,4 +1,7 @@
 
 junk.py
 create_graph.py
-vertex_minor/.Rhistory
+
+git rm -r --cached **/__pycache__/
+git commit -m "Remove __pycache__ from tracking"
+git push
