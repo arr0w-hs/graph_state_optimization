@@ -9,7 +9,7 @@ from pprint import pprint
 from ast import literal_eval
 from subprocess import check_output
 # Local modules
-from gsc.utils import canonical_edge_order, flatten, powerset
+from .utils import canonical_edge_order, flatten, powerset
 
 bin2gate = {(1, 0, 0, 1): 'I', (0, 1, 1, 0): 'H', (1, 0, 1, 1): 'S',
             (1, 1, 1, 0): 'HS', (0, 1, 1, 1): 'SH', (1, 1, 0, 1): 'HSH'}

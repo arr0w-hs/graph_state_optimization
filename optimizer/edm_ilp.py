@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import warnings
 import time
 
-from utils.edm_sa import EDM_SimAnnealing as SimAnnealing
+from optimizer.edm_sa import EDM_SimAnnealing as SimAnnealing
 warnings.simplefilter(action='ignore', category=FutureWarning)  # this is called to suppress an annoying warning from networkx when running a version < 3.0
 
 #
@@ -151,7 +151,7 @@ def ilp_minimize_edges(input_G, draw=False):
         constraints_type4 += ad_constraints
         constraints_type4 += bc_constraints
 
-    constraints_type5.append(num_edges <= max_edges)
+    #constraints_type5.append(num_edges <= max_edges)
     #constraints_type6.append(min_edges <= num_edges)
     # attempt to solve
     problem = cvx.Problem(cvx.Minimize(num_edges), [*constraints_type1, *constraints_type2,

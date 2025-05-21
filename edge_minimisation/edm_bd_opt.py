@@ -54,11 +54,12 @@ runtime_ilp_list = []
 
 for i in range(1):
 
-    n= 6+i
+    n= 16+i
 
     g_inp_list = g_data[str(n)]
 
     for G in g_inp_list:
+        #print(G.number_of_nodes())
 
         output = edm_sa_ilp(G, max_k, temp_initial)
 

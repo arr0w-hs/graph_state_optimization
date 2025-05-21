@@ -1,7 +1,14 @@
+
+import sys
+import os
 from optimizer.ILP_minimize_edges import minimize_edges
 import networkx as nx
 import matplotlib.pyplot as plt
 
+sys.path.append(os.path.dirname(__file__))
+dir_name = os.path.dirname(__file__)
+
+plt.rcParams.update({'font.size': 12})
 def create_network():
     network = nx.Graph()
     network_labels = nx.Graph()
@@ -64,6 +71,7 @@ def create_network():
     print(num_edges)
 
     nx.draw_networkx_edges(G, pos=cities, edge_color='r', width=8, alpha=0.5)
+    plt.savefig(dir_name+"/figs/input" + ".pdf", dpi=800, format="pdf", bbox_inches = 'tight')
 
     plt.figure(2)
 
@@ -75,8 +83,9 @@ def create_network():
     nx.draw_networkx_edge_labels(network, cities, edge_labels)
 
     nx.draw_networkx_edges(H, pos=cities, edge_color='g', width=8, alpha=0.5)
+    plt.savefig(dir_name+"/figs/output" + ".pdf", dpi=800, format="pdf", bbox_inches = 'tight')
     plt.show()
 
-
+    print(dir_name)
 if __name__ == "__main__":
     create_network()
