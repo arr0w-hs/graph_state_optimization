@@ -15,11 +15,11 @@ import pandas as pd
 import seaborn as sns
 import numpy as np
 
-#plt.rcParams.update({'font.size': 12})
+
 sys.path.append(os.path.dirname(__file__))
 dir_name = os.path.dirname(__file__)
 fs = 15
-data_dir = os.path.join(dir_name, "bd_results/data")
+data_dir = os.path.join(dir_name, "bd_results/results")
 plot_dir = os.path.join(dir_name, "bd_results/plots")
 
 df_list = []
@@ -70,7 +70,7 @@ plt.tick_params(direction='out', length=6, width=200,
                 grid_alpha=0.5 , pad = 1)
 plt.legend(fontsize = 13, title="Method", title_fontsize=fs,
            handlelength=1.3, handleheight=0.5, labelspacing = 0.15)
-# plt.savefig(plot_dir + "/edge_with_band" + ".pdf", dpi=800, format="pdf", bbox_inches = 'tight')
+plt.savefig(plot_dir + "/edge_with_band" + ".pdf", dpi=800, format="pdf", bbox_inches = 'tight')
 #plt.savefig(plot_dir + "/edge_with_band" + ".png", dpi=800, format="png", bbox_inches = 'tight')
 
 
@@ -84,12 +84,15 @@ rt_df = pd.melt(out_df, id_vars=['vertex_num'], value_vars=['SA+ILP', 'ILP'],
 plt.figure()
 
 sns.set_theme(font_scale=1.5, style = "whitegrid")
-ax = sns.catplot(data = rt_df, x="vertex_num", y="runtime",
-            hue = "Method", kind = "strip", alpha = 0.75,
-            s = 10, legend=False, height=4, aspect=1.5)
+# ax = sns.catplot(data = rt_df, x="vertex_num", y="runtime",
+#             hue = "Method", kind = "strip", alpha = 0.75,
+#             s = 10, legend=False, height=4, aspect=1.5)
+# ax = sns.catplot(data = rt_df, x="vertex_num", y="runtime",
+#             hue = "Method", kind = "box", legend=False, height=4, aspect=1.5,)#, alpha = 0.75)#,
+            # s = 10, legend=False, height=4, aspect=1.5)
 sns.pointplot(
     data=rt_df, x="vertex_num", y="runtime", hue="Method",
-    dodge=0, errorbar=None)
+    dodge=0.15, errorbar=("pi"), markers=["v", "o"], capsize=0.1)
 plt.yscale("log")
 plt.yticks(10**(np.arange(6)))
 plt.xlabel("Number of vertices", fontsize=fs, labelpad=1)
@@ -97,42 +100,43 @@ plt.ylabel("Runtime (seconds)", fontsize=fs, labelpad=0)
 plt.tick_params(axis = 'y', direction='out', length=1, width=2,
                 grid_alpha=0.5 , pad = 0, labelsize =15)#grid_color='r'
 plt.tight_layout()
-plt.legend(fontsize = 13, title="Method", title_fontsize=fs,
-           handlelength=1.3, handleheight=0.5, labelspacing = 0.15)
-# plt.savefig(plot_dir + "/catplot_withline" + ".pdf", dpi=800, format="pdf", bbox_inches = 'tight')
+plt.legend( fontsize = 13, title="Method", title_fontsize=fs,
+            handlelength=1.3, handleheight=0.5, labelspacing = 0.15)
+plt.savefig(plot_dir + "/catplot_withline" + ".pdf", dpi=800, format="pdf", bbox_inches = 'tight')
 #plt.savefig(plot_dir + "/catplot_withline" + ".png", dpi=800, format="png", bbox_inches = 'tight')
 
 """
     %%%%%%%%%%%%%%%%%%% fig %%%%%%%%%%%%%%%%%%%
 """
-out_df = out_df.rename(columns={"rt_sailp": "SA+ILP", "rt_ilp": "ILP"})
-rt_df = pd.melt(out_df, id_vars=['edge'], value_vars=['SA+ILP', 'ILP'],
-                var_name='Method', value_name='runtime')
-edge_array = out_df[["edge"]].to_numpy().flatten()
-edge_min = np.min(edge_array)
-edge_max = np.max(edge_array)
-print(edge_min, edge_max)
-plt.figure()
+# out_df = out_df.rename(columns={"rt_sailp": "SA+ILP", "rt_ilp": "ILP"})
+# rt_df = pd.melt(out_df, id_vars=['edge'], value_vars=['SA+ILP', 'ILP'],
+#                 var_name='Method', value_name='runtime')
+# edge_array = out_df[["edge"]].to_numpy().flatten()
+# edge_min = np.min(edge_array)
+# edge_max = np.max(edge_array)
+# print(edge_min, edge_max)
+# plt.figure()
 
-sns.set_theme(font_scale=1.5, style = "whitegrid")
-ax = sns.catplot(data = rt_df, x="edge", y="runtime",
-            hue = "Method", kind = "strip", alpha = 0.75,
-            s = 10, legend=False, height=4, aspect=1.5)
-sns.pointplot(
-    data=rt_df, x="edge", y="runtime", hue="Method",
-    dodge=0, errorbar=None)
-plt.yscale("log")
-plt.yticks(10**(np.arange(6)))
-plt.xticks((np.arange(0, edge_max, 5)))
-plt.xlabel("Number of vertices", fontsize=fs, labelpad=1)
-plt.ylabel("Runtime (seconds)", fontsize=fs, labelpad=0)
-plt.tick_params(axis = 'y', direction='out', length=1, width=2,
-                grid_alpha=0.5 , pad = 0, labelsize =15)#grid_color='r'
-plt.tight_layout()
-plt.legend(fontsize = 13, title="Method", title_fontsize=fs,
-            handlelength=1.3, handleheight=0.5, labelspacing = 0.15)
+# sns.set_theme(font_scale=1.5, style = "whitegrid")
+# ax = sns.catplot(data = rt_df, x="edge", y="runtime",
+#             hue = "Method", kind = "strip",
+#             s = 10, legend=False, height=4, aspect=1.5, alpha = 0.75)
+# # sns.pointplot(
+# #     data=rt_df, x="edge", y="runtime", hue="Method",
+# #     dodge=0, errorbar=None)
+# plt.yscale("log")
+# plt.yticks(10**(np.arange(6)))
+# plt.xticks((np.arange(0, edge_max, 5)))
+# plt.xlabel("Number of vertices", fontsize=fs, labelpad=1)
+# plt.ylabel("Runtime (seconds)", fontsize=fs, labelpad=0)
+# plt.tick_params(axis = 'y', direction='out', length=1, width=2,
+#                 grid_alpha=0.5 , pad = 0, labelsize =15)#grid_color='r'
+# plt.tight_layout()
+# plt.legend(fontsize = 13, title="Method", title_fontsize=fs,
+#             handlelength=1.3, handleheight=0.5, labelspacing = 0.15)
 # plt.savefig(plot_dir + "/catplot_withline1" + ".pdf", dpi=800, format="pdf", bbox_inches = 'tight')
 #plt.savefig(plot_dir + "/catplot_withline" + ".png", dpi=800, format="png", bbox_inches = 'tight')
+plt.show()
 """
     %%%%%%%%%%%%%%%%%%% fig %%%%%%%%%%%%%%%%%%%
 """
@@ -155,4 +159,4 @@ print(np.average(sa_array/sailp_array))
 
 print(np.average(sailp_rt/rt_array))
 
-print(rt_df)
+# print(rt_df)

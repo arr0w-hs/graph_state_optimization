@@ -21,8 +21,8 @@ from optimizer.edm_sa_ilp import edm_sa_ilp
 from optimizer.edm_ilp import ilp_minimize_edges
 
 """importing the generated bounded deg graphs"""
-graph_location = '/100_2024-07-14_124819.pkl'
-with open(dir_name+'/bounded_deg_graphs'+graph_location, 'rb') as f:
+graph_filename = '/100_2024-07-14_124819.pkl'
+with open(dir_name+'/bd_results/bd_graph'+graph_filename, 'rb') as f:
     data_dict_loaded = pickle.load(f)
     f.close()
 
@@ -54,7 +54,7 @@ runtime_ilp_list = []
 
 for i in range(1):
 
-    n= 16+i
+    n= 6+i
 
     g_inp_list = g_data[str(n)]
 
@@ -96,7 +96,7 @@ graph_dict = {
     }
 
 metadata_dict = {
-    "input_file": graph_location,
+    "input_file": graph_filename,
     }
 
 ts = pd.Timestamp.today(tz = 'Europe/Stockholm')
@@ -105,8 +105,8 @@ date_str = str(ts.date())
 time_str = ts.time()
 time_str = str(time_str.hour)+ str(time_str.minute) + str(time_str.second)
 print(time_str)
-data_directory = os.path.join(dir_name+"/data", date_str+"_sa_ilp_bd/")
-graph_directory= os.path.join(dir_name+"/graphs", "n="+str(n)+"/")
+data_directory = os.path.join(dir_name+"/bd_results/results", date_str+"_sa_ilp_bd/")
+graph_directory= os.path.join(dir_name+"/bd_results/mer_graphs", "n="+str(n)+"/")
 
 date_folder = Path(data_directory)
 if not date_folder.exists():

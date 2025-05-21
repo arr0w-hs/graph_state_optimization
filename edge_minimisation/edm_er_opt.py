@@ -21,12 +21,10 @@ sys.path.append(os.path.dirname(__file__))
 dir_name = os.path.dirname(__file__)
 
 from optimizer.edm_sa_ilp import edm_sa_ilp
-#from optimizer.edm_ilp import ilp_minimize_edges
-
 
 """importing the generated bounded deg graphs"""
-graph_location = '/13_100_20_2024-07-16_162924.pkl'
-with open(dir_name+'/er_graphs'+graph_location, 'rb') as f:
+graph_filename = '/13_100_20_2024-07-16_162924.pkl'
+with open(dir_name+'/er_results/er_graphs'+graph_filename, 'rb') as f:
     data_dict_loaded = pickle.load(f)
     f.close()
 
@@ -49,6 +47,7 @@ runtime_sailp_list = []
 runtime_ilp_list = []
 
 print(g_data.keys())
+
 
 for i, ele in enumerate(p_list):
     n = 13
@@ -88,7 +87,7 @@ graph_dict = {
     }
 
 metadata_dict = {
-    "input_file": graph_location,
+    "input_file": graph_filename,
     }
 
 ts = pd.Timestamp.today(tz = 'Europe/Stockholm')
@@ -97,9 +96,9 @@ date_str = str(ts.date())
 time_str = ts.time()
 time_str = str(time_str.hour)+ str(time_str.minute) + str(time_str.second)
 print(time_str)
-data_directory = os.path.join(dir_name+"/data", date_str+"_sa_ilp_er/")
-graph_directory= os.path.join(dir_name+"/graphs", "n="+str(n)+"/")
-plots_directory = os.path.join(dir_name+"/plots", date_str+"_sa_ilp_er/")
+data_directory = os.path.join(dir_name+"/er_results/results", date_str+"_sa_ilp_er/")
+graph_directory= os.path.join(dir_name+"/er_results/mer_graphs", "n="+str(n)+"/")
+plots_directory = os.path.join(dir_name+"/er_results/plots", date_str+"_sa_ilp_er")
 
 date_folder = Path(data_directory)
 if not date_folder.exists():
@@ -126,4 +125,3 @@ with open(graph_directory
 with open(graph_directory + time_str +'_metadata.txt', mode="w") as f:
     f.write(str(metadata_dict))
     f.close()
-

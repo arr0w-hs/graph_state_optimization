@@ -23,7 +23,7 @@ dir_name = os.path.dirname(__file__)
 os.chdir(dir_name)
 sys.path.append('..')
 
-from edge_minimisation.gen_bounded_deg import check_is_iso
+from edge_minimisation.gen_bd import check_is_iso
 
 def create_er(sample_size, n, num_points):
     """
@@ -43,7 +43,7 @@ def create_er(sample_size, n, num_points):
     p_list = np.linspace(0, 1, num_points, endpoint=False)
     p_list = p_list + 1/num_points
     p_list = p_list[:-1]
-    print(p_list)
+    # print(p_list)
     for p_ele in (p_list):
 
         if p_ele == 1:
@@ -63,10 +63,10 @@ def create_er(sample_size, n, num_points):
                 flag += 1
                 g_list.append(G)
 
-        print(len(g_list), "len glist", p_ele)
-        g_data[str(p_ele)] = g_list
+    #     print(len(g_list), "len glist", p_ele)
+    #     g_data[str(p_ele)] = g_list
 
-    print(g_data.keys())
+    # print(g_data.keys())
     graph_dict = {
         "g_data": g_data,
         "p_list": p_list,
@@ -84,10 +84,8 @@ def create_er(sample_size, n, num_points):
 
     time_str = ts.time()
     time_str = str(time_str.hour)+ str(time_str.minute) + str(time_str.second)
-    print(time_str)
-    #data_directory = os.path.join(dir_name+"/data", date_str+"_sa_ilp/")
+    # print(time_str)
     graph_directory= os.path.join(dir_name+"/er_graphs/")
-    #plots_directory = os.path.join(dir_name+"/plots", date_str+"_sa_ilp/")
 
     graph_folder = Path(graph_directory)
     if not graph_folder.exists():

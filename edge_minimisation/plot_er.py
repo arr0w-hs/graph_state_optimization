@@ -21,7 +21,7 @@ sys.path.append(os.path.dirname(__file__))
 dir_name = os.path.dirname(__file__)
 fs = 15
 """the location of folder with pickle files"""
-data_dir = os.path.join(dir_name, "er_results/data")
+data_dir = os.path.join(dir_name, "er_results/results")
 plot_dir = os.path.join(dir_name, "er_results/plots")
 df_list = []
 
@@ -102,26 +102,31 @@ rt_df = pd.melt(out_df, id_vars=['prob_val'], value_vars=['SA+ILP'],
 #rt_df = rt_df.drop(["ILP"])
 plt.figure()
 
-sns.set_theme(font_scale=1.5, style = "whitegrid")
-ax = sns.catplot(data = rt_df, x="prob_val", y="runtime",
-            hue = "Method", kind = "strip", alpha = 0.75,
-            s = 10, legend=False, height=5, aspect=1.5)
+sns.set_theme(font_scale=1.2, style = "whitegrid")
+# ax = sns.catplot(data = rt_df, x="prob_val", y="runtime",
+#             hue = "Method", kind = "strip", alpha = 0.75,
+#             s = 10, legend=False, height=5, aspect=1.5)
+# ax = sns.catplot(data = rt_df, x="prob_val", y="runtime",
+#             hue = "Method", kind = "box", legend=False, height=4, aspect=1.5, whis=(0, 100), label="SA+ILP")
 sns.pointplot(
     data=rt_df, x="prob_val", y="runtime", hue="Method",
-    dodge=0, errorbar=None)
+    dodge=0, errorbar=("pi"), markers=["v", "o"], capsize=0.15)
+# sns.pointplot(
+#     data=rt_df, x="prob_val", y="runtime", hue="Method",
+#     dodge=0, errorbar=None)
 plt.yscale("log")
-plt.xlabel("Probability", fontsize=18, labelpad=1)
-plt.ylabel("Runtime (seconds)", fontsize=18, labelpad=0)
+plt.xlabel("Probability", fontsize=fs, labelpad=1)
+plt.ylabel("Runtime (seconds)", fontsize=fs, labelpad=0)
 plt.tick_params(axis = 'y', direction='out', length=1, width=0,
                 grid_alpha=0.5 , pad = 1)#grid_color='r'
 plt.tick_params(axis = 'x',rotation=45)
 plt.tight_layout()
 plt.legend(fontsize = 14, title="Method", title_fontsize=15,
-           handlelength=1.3, handleheight=0.5, labelspacing = 0.15)
+            handlelength=1.3, handleheight=0.5, labelspacing = 0.15)
 plt.savefig(plot_dir  + "/catplot_withline" + ".pdf",dpi=800, format="pdf", bbox_inches = 'tight')
 #plt.savefig(plot_dir  + "/catplot_withline" + ".svg",dpi=800, format="svg", bbox_inches = 'tight')
 #plt.savefig(plot_dir  + "/catplot_withline" + ".png",dpi=800, format="png", bbox_inches = 'tight')
-
+plt.show()
 
 """
     %%%%%%%%%%%%%%%%%%% fig %%%%%%%%%%%%%%%%%%%

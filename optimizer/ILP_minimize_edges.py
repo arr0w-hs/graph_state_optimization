@@ -79,9 +79,7 @@ def create_thetap(n, W):
     # this function is used to cast the 1D list
     # of selection variables into a more natural 2D matrix form
     # Purely done for convenience/readability
-
     # function also return the variable corresponding to the num of edges
-
     # W is the graph whose edges correspond to the weights
 
     matrix = dict()
