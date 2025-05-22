@@ -24,7 +24,24 @@ from optimizer.edm_ilp import ilp_minimize_edges
 
 
 def edm_sa_ilp(G_in, k_max, temp):
+    """
+    function to find the MER for a given graph
+    using SA+ILP. this returns the statistics of
+    different algorithms
+    inputs: 
+        (1) graph to be minimised
+        (2) k_max: maximum number of iterations
+        (3) temp: initial temperature of the graph
 
+    outputs:
+        (1) output graph from SA+ILP
+        (2) output graph from SA
+        (3) number of edges in graph obtained from SA
+        (4) number of edges in graph obtained from SA+ILP
+        (5) runtime of SA+ILP
+        (6) runtime of ILP
+
+    """
     time1 = time.time()
     sa1 = SimAnnealing(G_in, k_max, temp)
     G_sa, y_list, _ = sa1.simulated_annealing("number of edges")
