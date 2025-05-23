@@ -26,7 +26,7 @@ from optimizer.edm_ilp import ilp_minimize_edges
 def edm_sa_ilp(G_in, k_max, temp):
     """
     function to find the MER for a given graph
-    using SA+ILP. this returns the statistics of
+    using SA+ILP and ILP. this returns the statistics of
     different algorithms
     inputs: 
         (1) graph to be minimised
