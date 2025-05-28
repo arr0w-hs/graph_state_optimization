@@ -15,3 +15,6 @@ The edge minimisation folder contains the files that can be used to
 
 # The tutorial file
 `tutorial-1.ipynb` is the file that shows how the aforementioned functions could be used to find MERs. It plots the input graph, approximate MER from `SA` and the exact MER from `SA+ILP`. It also prints the runtime of the `SA+ILP` and `ILP` algorithms.
+
+# Data files
+Data files can be found at [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15534839.svg)](https://doi.org/10.5281/zenodo.15534839) and should be put in the folder `edge_minimisation` so that the python files can access the data.
