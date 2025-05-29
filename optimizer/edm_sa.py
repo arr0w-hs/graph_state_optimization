@@ -15,7 +15,7 @@ dir_name = os.path.dirname(__file__)
 os.chdir(dir_name)
 sys.path.append('..')
 
-from optimizer.gsc.is_lc_equiv import are_lc_equiv
+#from optimizer.gsc.is_lc_equiv import are_lc_equiv
 import time
 #import itertools as it
 import matplotlib.pyplot as plt
