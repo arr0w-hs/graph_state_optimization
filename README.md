@@ -1,3 +1,6 @@
+# Installation
+To install the package, clone the repository and run `python setup.py install` in the top-level directory.
+
 # Codes for finding the MER for a given input graph  
 The folder optimizer has all the files for optimisation  
 `edm_sa.py` and `edm_sa_ilp.py` are the two files that can be used to find the MERs. They take in: `G_in`: a `networkx` graph, `k_max`: maximum iterations and `initial_temp`: the initial temperature.  
