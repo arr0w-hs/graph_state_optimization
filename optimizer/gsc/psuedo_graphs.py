@@ -91,4 +91,4 @@ def real_to_psuedo(real_g, c_map, psu_edge_index=None):
 
 if __name__ == '__main__':
     prime, power = 3, 1
-    print gen_psuedo_graph_edge_map(prime, power)
+    print(gen_psuedo_graph_edge_map(prime, power))

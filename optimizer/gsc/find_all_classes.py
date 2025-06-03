@@ -183,7 +183,7 @@ def find_all_classes(directory):
     rg_file = directory + '/remaining_graphs.csv'
     rem_graphs_size = os.path.getsize(rg_file)
     pbar = tqdm(total=rem_graphs_size)
-    print rem_graphs_size
+    print(rem_graphs_size)
     while True:
         rem_update = rem_graphs_size - os.path.getsize(rg_file)
         if rem_update >= 0:
@@ -252,14 +252,14 @@ if __name__ == '__main__':
     prime = 2
     power = 2
     nodes = 3
-    print prime, power, nodes
+    print(prime, power, nodes)
     init_search_database(prime, power, nodes)
     directory = 'class_databases/' + \
         'prime_power_p%d_m%d_n%d' % (prime, power, nodes)
 
-    print "Searching"
+    print("Searching")
     start = time()
     find_all_classes(directory)
     end = time() - start
     runtime = (int(end / 60), int(end % 60))
-    print "Runtime: %dm %ds" % runtime
+    print("Runtime: %dm %ds" % runtime)
