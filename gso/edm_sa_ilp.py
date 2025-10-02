@@ -19,8 +19,8 @@ import time
 sys.path.append(os.path.dirname(__file__))
 dir_name = os.path.dirname(__file__)
 
-from optimizer.edm_sa import EDM_SimAnnealing as SimAnnealing
-from optimizer.edm_ilp import ilp_minimize_edges
+from gso.edm_sa import EDM_SimAnnealing as SimAnnealing
+from gso.edm_ilp import ilp_minimize_edges
 
 
 def edm_sa_ilp(G_in, k_max, temp):

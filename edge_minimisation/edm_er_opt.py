@@ -16,11 +16,12 @@ sys.path.append('..')
 
 import pickle
 import pandas as pd
+import gso
 
 sys.path.append(os.path.dirname(__file__))
 dir_name = os.path.dirname(__file__)
 
-from optimizer.edm_sa_ilp import edm_sa_ilp
+from edm_sa_ilp import edm_sa_ilp
 
 """importing the generated bounded deg graphs"""
 graph_filename = '/13_100_20_2024-07-16_162924.pkl'

@@ -20,7 +20,7 @@ import pandas as pd
 import numpy as np
 
 from grgs_draw import add_leaves
-from optimizer.edm_sa import EDM_SimAnnealing as sa
+from gso.edm_sa import EDM_SimAnnealing as sa
 import optgraphstate as ogs
 
 

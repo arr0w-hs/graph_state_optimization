@@ -14,7 +14,7 @@ sys.path.append(os.path.dirname(__file__))
 dir_name = os.path.dirname(__file__)
 import matplotlib.pyplot as plt
 import networkx as nx
-from optimizer.edm_sa import EDM_SimAnnealing as sa
+from gso.edm_sa import EDM_SimAnnealing as sa
 
 def rgs_graph(num):
     G = nx.complete_graph(num)

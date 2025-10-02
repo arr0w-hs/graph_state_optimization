@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import warnings
 import time
 
-from optimizer.edm_sa import EDM_SimAnnealing as SimAnnealing
+from gso.edm_sa import EDM_SimAnnealing as SimAnnealing
 warnings.simplefilter(action='ignore', category=FutureWarning)  # this is called to suppress an annoying warning from networkx when running a version < 3.0
 
 #
@@ -94,6 +94,7 @@ def reconstruct_thetap(thetap, n):
 
 
 def ilp_minimize_edges(input_G, draw=False):
+
     time1 = time.time()
     if draw:
         print("Plotting input graph")
@@ -156,12 +157,14 @@ def ilp_minimize_edges(input_G, draw=False):
     # attempt to solve
     problem = cvx.Problem(cvx.Minimize(num_edges), [*constraints_type1, *constraints_type2,
                                                     *constraints_type3, *constraints_type4,])#*constraints_type5])
-
-    problem.solve(solver='MOSEK', mosek_params={'MSK_IPAR_MIO_HEURISTIC_LEVEL': 1})
+    # if solver = "MOSEK":
+    # problem.solve(solver='MOSEK', mosek_params={'MSK_IPAR_MIO_HEURISTIC_LEVEL': 1})
+    # else:
+    problem.solve()
     if problem.status != "optimal":
         print(problem.status)
-
-    adj_matrix, G = reconstruct_thetap(thetap, n)
+    
+    _, G = reconstruct_thetap(thetap, n)
 
     if draw:
         print("Plotting output graph")
@@ -177,7 +180,7 @@ if __name__ == "__main__":
 
     x = []
     y = []
-    for j in range(1):
+    for j in range(5):
 
         n = 5
         p = 0.05*(j+1)
@@ -185,7 +188,7 @@ if __name__ == "__main__":
         p = 0.6
         
         times=0
-        N = 1
+        N = 5
 
         in_edges = []
         sa_edges = []
@@ -206,6 +209,7 @@ if __name__ == "__main__":
             # print(len(G.edges()))
             _, num_edges,_ = ilp_minimize_edges(G, draw=False)
             ilp_edges.append(num_edges)
+            print(num_edges)
             time2 = time.time()
             times += time2-time1
             #print(time2-time1)
@@ -213,11 +217,12 @@ if __name__ == "__main__":
         print(times/N, "avg")
         y.append(times/N)
     plt.figure()
-    plt.plot(x,y)
-    #plt.plot(x, in_edges)
-    #plt.plot(x, ilp_edges)
-    #plt.plot(x, sa_edges)
+    # plt.plot(x,y)
+    plt.plot(x, in_edges)
+    plt.plot(x, ilp_edges)
+    # plt.plot(x, sa_edges)
     plt.ylabel('Number of edges')
     plt.xlabel('Iteration')
     plt.legend(["Initial edges", "ILP", "Simulated annealing"])
+    plt.show()
     

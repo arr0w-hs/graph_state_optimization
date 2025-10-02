@@ -1,8 +1,8 @@
 #from ILP_minimize_edges import minimize_edges
-from optimizer.gsc.is_lc_equiv import are_lc_equiv
+from gso.gsc.is_lc_equiv import are_lc_equiv
 import networkx as nx
 import matplotlib.pyplot as plt
-from optimizer.edm_sa import EDM_SimAnnealing as SimAnnealing
+from gso.edm_sa import EDM_SimAnnealing as SimAnnealing
 
 def minimize_BCGL(n1, n2, leaves, check=False, random=False):
     G = nx.complete_bipartite_graph(n1, n2)

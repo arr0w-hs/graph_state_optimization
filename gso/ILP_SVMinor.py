@@ -13,8 +13,8 @@ import matplotlib.pyplot as plt
 import warnings
 import time
 
-from optimizer.gsc.is_lc_equiv import are_lc_equiv
-from optimizer.ILP_minimize_edges import linearize
+#from gso.gsc.is_lc_equiv import are_lc_equiv
+from gso.ILP_minimize_edges import linearize
 warnings.simplefilter(action='ignore', category=FutureWarning)  # this is called to suppress an annoying warning from networkx when running a version < 3.0
 
 def create_star_graph(V, s):

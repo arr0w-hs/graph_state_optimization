@@ -17,8 +17,8 @@ sys.path.append('..')
 import pickle
 import pandas as pd
 
-from optimizer.edm_sa_ilp import edm_sa_ilp
-from optimizer.edm_ilp import ilp_minimize_edges
+from gso.edm_sa_ilp import edm_sa_ilp
+from gso.edm_ilp import ilp_minimize_edges
 
 """importing the generated bounded deg graphs"""
 graph_filename = '/100_2024-07-14_124819.pkl'

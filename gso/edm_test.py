@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 # from . import edm_sa as edm
-# from optimizer.gsc.is_lc_equiv import are_lc_equiv
+# from gso.gsc.is_lc_equiv import are_lc_equiv
 from edm_sa import EDM_SimAnnealing as sa
 
 
