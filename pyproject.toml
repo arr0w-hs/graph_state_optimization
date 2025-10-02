@@ -1,23 +1,27 @@
 [build-system]
-requires = ["setuptools >= 77.0.3"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling >= 1.26"]
+build-backend = "hatchling.build"
 
 [project]
 name = "gso"
 version = "1.0.2"
-authors = [{ name="arr0w-hs"}]
+authors = [{ name="Hemant Sharma"}]
 description = "Package for graph-state-optimisation"
 readme = "README.md"
 requires-python = ">=3.9"
-dependencies = ["numpy", "pandas", "matplotlib", "cvxpy", "mosek"]
+dependencies = [
+    "numpy",
+    "pandas",
+    "matplotlib",
+    "cvxpy",
+    "mosek",
+]
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
-    "Intended Audience :: Quantum engineers",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-license = "MIT"
-license-files = ["LICEN[CS]E*"]
+license = { file = "LICENSE" }
 
 [project.urls]
 Homepage = "https://github.com/arr0w-hs/graph_state_optimization"
