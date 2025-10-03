@@ -14,7 +14,6 @@ dependencies = [
     "pandas",
     "matplotlib",
     "cvxpy",
-    "mosek",
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -25,4 +24,8 @@ license = { file = "LICENSE" }
 
 [project.urls]
 Homepage = "https://github.com/arr0w-hs/graph_state_optimization"
-Issues = "https://github.com/arr0w-hs/graph_state_optimization/issues/2"
+Issues = "https://github.com/arr0w-hs/graph_state_optimization/issues/"
+Releases = "https://github.com/arr0w-hs/graph_state_optimization/releases"
+
+[project.optional-dependencies]
+mosek = ["mosek"]

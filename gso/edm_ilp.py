@@ -1,10 +1,3 @@
-import sys
-import os
-from pathlib import Path
-dir_name = os.path.dirname(__file__)
-os.chdir(dir_name)
-sys.path.append('..')
-
 import cvxpy as cvx
 import numpy as np
 import networkx as nx
@@ -93,7 +86,7 @@ def reconstruct_thetap(thetap, n):
     return adj_matrix, G
 
 
-def ilp_minimize_edges(input_G, draw=False):
+def edm_ilp(input_G, draw=False):
 
     time1 = time.time()
     if draw:
@@ -207,7 +200,7 @@ if __name__ == "__main__":
             sa_edges.append(G.number_of_edges())
 
             # print(len(G.edges()))
-            _, num_edges,_ = ilp_minimize_edges(G, draw=False)
+            _, num_edges,_ = edm_ilp(G, draw=False)
             ilp_edges.append(num_edges)
             print(num_edges)
             time2 = time.time()

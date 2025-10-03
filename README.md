@@ -1,5 +1,8 @@
 # Installation
-To install the package, clone the repository and run `python setup.py install` in the top-level directory.
+Package is available on pypi and can be intalled with `pip install gso`. 
+
+# Optional additional requirements
+MOSEK could be used for solving the ILP formulation. MOSEK requires an additional step of download and activation of license file. Mosek can be installed via `pip install mosek` or `pip install "gso[mosek]"`. Information about mosek license can be found here: <https://docs.mosek.com/11.0/licensing/quickstart.html>.
 
 # Codes for finding the MER for a given input graph  
 The folder optimizer has all the files for optimisation  

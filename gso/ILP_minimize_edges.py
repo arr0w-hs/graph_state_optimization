@@ -215,7 +215,7 @@ def minimize_edges(input_G, W=None, draw=False, export_only=False, filename=None
 
 #
 if __name__ == "__main__":
-    from graphs import get_graph_dict, LC
+    # from graphs import get_graph_dict, LC
     # n = 8
     # p = 0.2
     #
@@ -257,7 +257,7 @@ if __name__ == "__main__":
     p = 0.4
 
 
-    graph_dict = get_graph_dict()
+    # graph_dict = get_graph_dict()
     # G = graph_dict[18]
 
     # _, num_edges = minimize_edges(G, draw=False, export_only=True, filename="sedgewick")

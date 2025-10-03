@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import warnings
 import time
 
-#from gso.gsc.is_lc_equiv import are_lc_equiv
+# from gsc.is_lc_equiv import are_lc_equiv
 from gso.ILP_minimize_edges import linearize
 warnings.simplefilter(action='ignore', category=FutureWarning)  # this is called to suppress an annoying warning from networkx when running a version < 3.0
 
@@ -152,7 +152,7 @@ def has_SVM(input_G, V, s, draw=False, check_LC=False):
     else:
         adj_matrix, G = reconstruct_thetap(thetap, n)
         if check_LC:
-            assert are_lc_equiv(input_G, G)
+            # assert are_lc_equiv(input_G, G)
             ind_G = nx.induced_subgraph(G, V + [s])
             star_graph = create_star_graph(V, s)
             assert set(ind_G.nodes()) == set(star_graph.nodes())

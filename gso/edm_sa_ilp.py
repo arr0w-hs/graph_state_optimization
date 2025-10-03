@@ -6,21 +6,9 @@ Created on Tue Jul  2 14:30:13 2024
 @author: hsharma4
 """
 
-import sys
-import os
-
-dir_name = os.path.dirname(__file__)
-os.chdir(dir_name)
-sys.path.append('..')
-
 import time
-
-
-sys.path.append(os.path.dirname(__file__))
-dir_name = os.path.dirname(__file__)
-
-from gso.edm_sa import EDM_SimAnnealing as SimAnnealing
-from gso.edm_ilp import ilp_minimize_edges
+from gso.edm_sa import edm_sa
+from gso.edm_ilp import edm_ilp
 
 
 def edm_sa_ilp(G_in, k_max, temp):
@@ -43,12 +31,11 @@ def edm_sa_ilp(G_in, k_max, temp):
 
     """
     time1 = time.time()
-    sa1 = SimAnnealing(G_in, k_max, temp)
-    G_sa, y_list, _ = sa1.simulated_annealing("number of edges")
+    G_sa, y_list, _ = edm_sa(G_in, k_max, temp)
     sa_edges = (G_sa.number_of_edges())
 
     # print(len(G.edges()))
-    G_final, sa_ilp_edges, ilp_runtime = ilp_minimize_edges(G_sa, draw=False)
+    G_final, sa_ilp_edges, ilp_runtime = edm_ilp(G_sa, draw=False)
 
     time2 = time.time()
 
