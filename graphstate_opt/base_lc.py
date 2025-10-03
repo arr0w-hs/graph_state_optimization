@@ -8,19 +8,8 @@ Created on Mon Apr  8 11:10:24 2024
 base functions for applying local complementation
 with greedy appraoch
 """
-import sys
-import os
-
-dir_name = os.path.dirname(__file__)
-os.chdir(dir_name)
-sys.path.append('..')
-
-
 import numpy as np
 import networkx as nx
-
-sys.path.append(os.path.dirname(__file__))
-dir_name = os.path.dirname(__file__)
 
 class Greedy:
     """Class for implementing greedy algorithm with different heuristics"""

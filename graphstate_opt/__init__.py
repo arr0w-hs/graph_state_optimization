@@ -11,11 +11,10 @@ Package for finding minimum-edge representatives of LC-equivalent graph states
 
 from importlib.metadata import version, PackageNotFoundError
 try:
-    __version__ = version("gso")
+    __version__ = version("graphstate-opt")
 except PackageNotFoundError:
     __version__ = "0.0.0"
 
-# Public API re-exports
 from .base_lc import *
 from .edm_ilp import *
 from .edm_sa_ilp import *
@@ -23,9 +22,6 @@ from .edm_sa import *
 from .wedm_ilp import *
 from .ILP_SVMinor import *
 from .ILP_VMinor import *
-
-# Optional: don’t pull in test helpers by default
-# (users can still `import gso.edm_test` if needed)
 
 __all__ = [
     "__version__",

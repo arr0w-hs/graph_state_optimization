@@ -20,7 +20,7 @@ import pandas as pd
 sys.path.append(os.path.dirname(__file__))
 dir_name = os.path.dirname(__file__)
 
-from gso.edm_sa_ilp import edm_sa_ilp
+from graphstate_opt.edm_sa_ilp import edm_sa_ilp
 
 """importing the generated bounded deg graphs"""
 graph_filename = '/13_100_20_2024-07-16_162924.pkl'

@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import warnings
 import time
 
-from gso.edm_sa import edm_sa
+from graphstate_opt.edm_sa import edm_sa
 warnings.simplefilter(action='ignore', category=FutureWarning)  # this is called to suppress an annoying warning from networkx when running a version < 3.0
 
 #

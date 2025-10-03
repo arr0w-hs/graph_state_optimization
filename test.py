@@ -1,4 +1,4 @@
-from gso.edm_sa import EDM_SimAnnealing
+from graphstate_opt.edm_sa import EDM_SimAnnealing
 import networkx as nx
 
 

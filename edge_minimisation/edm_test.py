@@ -9,7 +9,7 @@ code for analysing edge_minimisation on ER graphs
 
 from pathlib import Path
 import networkx as nx
-from gso.edm_sa_ilp import edm_sa_ilp
+from graphstate_opt.edm_sa_ilp import edm_sa_ilp
 
 import pandas as pd
 

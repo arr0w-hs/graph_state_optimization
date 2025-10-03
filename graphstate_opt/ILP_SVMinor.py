@@ -1,10 +1,3 @@
-import sys
-import os
-from pathlib import Path
-#dir_name = os.path.dirname(__file__)
-#os.chdir(dir_name)
-sys.path.append('..')
-
 import cvxpy as cvx
 import numpy as np
 import networkx as nx
@@ -12,36 +5,45 @@ import matplotlib.pyplot as plt
 import warnings
 import time
 
-
 # from gsc.is_lc_equiv import are_lc_equiv
-from gso.wedm_ilp import linearize
-
+from graphstate_opt.wedm_ilp import linearize
 warnings.simplefilter(action='ignore', category=FutureWarning)  # this is called to suppress an annoying warning from networkx when running a version < 3.0
 
-def create_VM_color_map(G, H):
+def create_star_graph(V, s):
+    G = nx.Graph()
+    G.add_edges_from([(s, v) for v in V])
+    return G
+
+def create_star_color_map(G, V, s):
+    for v in V:
+        assert v in G.nodes()
+    assert s in G.nodes()
 
     colors = dict()
     for v in G.nodes():
-        if v in H:
-            colors[v] = 'r'
+        if v in V:
+            colors[v] = 'g'
         else:
             colors[v] = 'b'
+        if v == s:
+            colors[v] = 'r'
     colors = [colors[v] for v in G.nodes()] ## hacky...
     return colors
 
-def create_thetap_VM(n, H):
+def create_thetap_SVM(n, V, s):
     matrix = dict()
 
+    if s in V:
+        V.remove(s)
     for i in range(n):
         for j in range(n):
             if i < j:
-                if i in H and j in H:
-                    if H.has_edge(i, j):
-                        matrix[i, j] = 1
-                        matrix[j, i] = 1
-                    else:
-                        matrix[i, j] = 0
-                        matrix[j, i] = 0
+                if (i == s and j in V) or (j == s and i in V):
+                    matrix[i, j] = 1
+                    matrix[j, i] = 1
+                elif i in V and j in V:
+                    matrix[i, j] = 0
+                    matrix[j, i] = 0
                 else:
                     sel_variable = cvx.Variable(1, boolean=True, name="e_" + str(i) + '-' + str(j))
                     matrix[i, j] = sel_variable
@@ -74,11 +76,11 @@ def reconstruct_thetap(thetap, n):
     return adj_matrix, G
 
 
-def has_VM(input_G, H, draw=False, check_LC=False):
+def has_SVM(input_G, V, s, draw=False, check_LC=False):
     if draw:
         print("Plotting input graph")
         positions = nx.spring_layout(input_G)
-        colors = create_VM_color_map(input_G, H)
+        colors = create_star_color_map(input_G, V, s)
         nx.draw(input_G, pos=positions, node_color=colors)
         plt.show()
 
@@ -89,7 +91,7 @@ def has_VM(input_G, H, draw=False, check_LC=False):
 
     n = len(theta)
 
-    thetap = create_thetap_VM(n, H)
+    thetap = create_thetap_SVM(n, V, s)
 
     a = cvx.Variable(n, boolean=True)
     b = cvx.Variable(n, boolean=True)
@@ -133,7 +135,7 @@ def has_VM(input_G, H, draw=False, check_LC=False):
     # that's why I add a dummy optimization variable. Very hacky!
     dummy_optimization = cvx.Variable(1, boolean=True)
     problem = cvx.Problem(cvx.Minimize(dummy_optimization), [*constraints_type1, *constraints_type2,
-                                                             *constraints_type3, *constraints_type4])
+                                                    *constraints_type3, *constraints_type4])
 
     problem.solve()
     if problem.status != "optimal":
@@ -143,11 +145,12 @@ def has_VM(input_G, H, draw=False, check_LC=False):
         adj_matrix, G = reconstruct_thetap(thetap, n)
         if check_LC:
             # assert are_lc_equiv(input_G, G)
-            ind_G = nx.induced_subgraph(G, H.nodes())
-            assert set(ind_G.nodes()) == set(H.nodes())
+            ind_G = nx.induced_subgraph(G, V + [s])
+            star_graph = create_star_graph(V, s)
+            assert set(ind_G.nodes()) == set(star_graph.nodes())
             for e in ind_G.edges():
-                assert e in H.edges() or e[::-1] in H.edges()
-            for e in H.edges():
+                assert e in star_graph.edges() or e[::-1] in star_graph.edges()
+            for e in star_graph.edges():
                 assert e in ind_G.edges() or e[::-1] in ind_G.edges()
             print("LC check passed.")
 
@@ -161,20 +164,18 @@ def has_VM(input_G, H, draw=False, check_LC=False):
 
 
 if __name__ == "__main__":
-    n = 5
-    p = 0.6
+    n = 6
+    p = 0.8
 
-    times = 0
+    times=0
     N = 1
     for _ in range(N):
         time1 = time.time()
         G = nx.erdos_renyi_graph(n, p)
         # print(len(G.edges()))
-        H = nx.cycle_graph(6)
-        feasible, G_output = has_VM(G, H, check_LC=True)
+        feasible, G_output = has_SVM(G, [0, 1, 2, 3], 1, check_LC=True)
         time2 = time.time()
         times += time2-time1
-        print(feasible)
         print(time2-time1)
     print("avg time:")
     print(times/N)

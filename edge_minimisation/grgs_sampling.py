@@ -18,7 +18,7 @@ sys.path.append(os.path.dirname(__file__))
 
 dir_name = os.path.dirname(__file__)
 sys.path.append('..')
-from gso.edm_sa import EDM_SimAnnealing as sa
+from graphstate_opt.edm_sa import EDM_SimAnnealing as sa
 #from gso.gsc.is_lc_equiv import are_lc_equiv
 from itertools import zip_longest, combinations
 from networkx.algorithms import isomorphism as iso

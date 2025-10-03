@@ -7,8 +7,8 @@ Created on Tue Jul  2 14:30:13 2024
 """
 
 import time
-from gso.edm_sa import edm_sa
-from gso.edm_ilp import edm_ilp
+from graphstate_opt.edm_sa import edm_sa
+from graphstate_opt.edm_ilp import edm_ilp
 
 
 def edm_sa_ilp(G_in, k_max, temp):

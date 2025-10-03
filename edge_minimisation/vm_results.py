@@ -18,9 +18,9 @@ import networkx as nx
 sys.path.append(os.path.dirname(__file__))
 dir_name = os.path.dirname(__file__)
 
-from gso.ILP_VMinor import has_VM
-from gso.edm_sa import EDM_SimAnnealing as sa
-from gso.wedm_ilp import minimize_edges as ilp_minimize_edges
+from graphstate_opt.ILP_VMinor import has_VM
+from graphstate_opt.edm_sa import EDM_SimAnnealing as sa
+from graphstate_opt.wedm_ilp import minimize_edges as ilp_minimize_edges
 
 
 l1 = []

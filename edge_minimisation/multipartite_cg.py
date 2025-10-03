@@ -16,9 +16,9 @@ import networkx as nx
 sys.path.append(os.path.dirname(__file__))
 dir_name = os.path.dirname(__file__)
 import random as random
-from gso.edm_sa_ilp import edm_sa_ilp
-from gso.edm_sa import EDM_SimAnnealing as sa
-from gso.wedm_ilp import minimize_edges as ilp_minimize_edges
+from graphstate_opt.edm_sa_ilp import edm_sa_ilp
+from graphstate_opt.edm_sa import EDM_SimAnnealing as sa
+from graphstate_opt.wedm_ilp import minimize_edges as ilp_minimize_edges
 
 plt.rcParams.update({'font.size': 12})
 sys.path.append(os.path.dirname(__file__))

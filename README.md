@@ -1,13 +1,13 @@
 # Installation
-Package is available on pypi and can be intalled with `pip install gso`. 
+Package is available on pypi and can be installed with `pip install graphstate-opt`. 
 
 # Optional additional requirements
-MOSEK could be used for solving the ILP formulation. MOSEK requires an additional step of download and activation of license file. Mosek can be installed via `pip install mosek` or `pip install "gso[mosek]"`. Information about mosek license can be found here: <https://docs.mosek.com/11.0/licensing/quickstart.html>.
+MOSEK could be used for solving the ILP formulation. MOSEK requires an additional step of download and activation of license file. Mosek can be installed via `pip install mosek` or `pip install "graphstate-opt[mosek]"`. Information about mosek license can be found here: <https://docs.mosek.com/11.0/licensing/quickstart.html>.
 
 # Codes for finding the MER for a given input graph  
 The folder optimizer has all the files for optimisation  
 `edm_sa.py` and `edm_sa_ilp.py` are the two files that can be used to find the MERs. They take in: `G_in`: a `networkx` graph, `k_max`: maximum iterations and `initial_temp`: the initial temperature.  
-- `EDM_SimAnnealing` is the class for implementing simulated annealing approach for finding MERs. This is a heuristic algorithm that can go up to graphs with 100 vertices.  
+- `edm_sa` is the function for implementing simulated annealing approach for finding MERs. This is a heuristic algorithm that can go up to graphs with 100 vertices.  
 - `edm_sa_ilp(G_in, k_max, temp)` is the function for running the `SA+ILP` algorithm. We use it to find MERs for graphs up to 16 vertices.  
 - `edm_ilp.py` is the source code for the `SA+ILP` algorithm that implements the ILP part of the `SA+ILP` algorithm  
 
