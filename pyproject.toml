@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "gso"
-version = "1.0.2"
+version = "1.1.1"
 authors = [{ name="Hemant Sharma"}]
 description = "Package for graph-state-optimisation"
 readme = "README.md"

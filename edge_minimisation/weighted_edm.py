@@ -1,7 +1,7 @@
 
 import sys
 import os
-from gso.ILP_minimize_edges import minimize_edges
+from gso.wedm_ilp import minimize_edges
 import networkx as nx
 import matplotlib.pyplot as plt
 

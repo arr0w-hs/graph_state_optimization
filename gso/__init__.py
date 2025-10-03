@@ -20,7 +20,7 @@ from .base_lc import *
 from .edm_ilp import *
 from .edm_sa_ilp import *
 from .edm_sa import *
-from .ILP_minimize_edges import *
+from .wedm_ilp import *
 from .ILP_SVMinor import *
 from .ILP_VMinor import *
 
@@ -32,4 +32,7 @@ __all__ = [
     "edm_sa",
     "edm_ilp",
     "edm_sa_ilp",
+    "local_complementation",
+    "wedm_ilp",
+    "has_VM",
 ]

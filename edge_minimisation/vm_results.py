@@ -20,7 +20,7 @@ dir_name = os.path.dirname(__file__)
 
 from gso.ILP_VMinor import has_VM
 from gso.edm_sa import EDM_SimAnnealing as sa
-from gso.ILP_minimize_edges import minimize_edges as ilp_minimize_edges
+from gso.wedm_ilp import minimize_edges as ilp_minimize_edges
 
 
 l1 = []

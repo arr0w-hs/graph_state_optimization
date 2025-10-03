@@ -1,17 +1,9 @@
-import sys
-import os
-from pathlib import Path
-#dir_name = os.path.dirname(__file__)
-#os.chdir(dir_name)
-sys.path.append('..')
-
 import cvxpy as cvx
 import random
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
 import warnings
-# from ILP_VMinor import has_VM
 import time
 warnings.simplefilter(action='ignore', category=FutureWarning)  # this is called to suppress an annoying warning from networkx when running a version < 3.0
 
@@ -117,7 +109,7 @@ def reconstruct_thetap(thetap, n):
     return adj_matrix, G
 
 
-def minimize_edges(input_G, W=None, draw=False, export_only=False, filename=None):
+def wedm_ilp(input_G, W=None, draw=False, export_only=False, filename=None):
     if export_only and filename is None:
         raise RuntimeError("Export only flag used, but no filename provided.")
     if filename is not None and not export_only:

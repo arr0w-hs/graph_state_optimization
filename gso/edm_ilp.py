@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import warnings
 import time
 
-from gso.edm_sa import EDM_SimAnnealing as SimAnnealing
+from gso.edm_sa import edm_sa
 warnings.simplefilter(action='ignore', category=FutureWarning)  # this is called to suppress an annoying warning from networkx when running a version < 3.0
 
 #
@@ -195,8 +195,7 @@ if __name__ == "__main__":
             #G = nx.complete_graph(10)
             in_edges.append(G.number_of_edges())
 
-            sa1 = SimAnnealing(G, 100, 100)
-            G, y_list, ui_list = sa1.simulated_annealing("number of edges")
+            G, y_list, ui_list = edm_sa(G, 100, 100)
             sa_edges.append(G.number_of_edges())
 
             # print(len(G.edges()))

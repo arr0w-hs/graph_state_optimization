@@ -14,7 +14,7 @@ import warnings
 import time
 
 # from gsc.is_lc_equiv import are_lc_equiv
-from gso.ILP_minimize_edges import linearize
+from gso.wedm_ilp import linearize
 warnings.simplefilter(action='ignore', category=FutureWarning)  # this is called to suppress an annoying warning from networkx when running a version < 3.0
 
 def create_star_graph(V, s):
