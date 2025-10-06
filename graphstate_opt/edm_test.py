@@ -14,10 +14,7 @@ import networkx as nx
 import time
 import matplotlib.pyplot as plt
 import pandas as pd
-
-# from . import edm_sa as edm
-# from gso.gsc.is_lc_equiv import are_lc_equiv
-from edm_sa import EDM_SimAnnealing as sa
+from graphstate_opt.edm_sa import edm_sa
 
 
 if __name__ == "__main__":
@@ -46,11 +43,10 @@ if __name__ == "__main__":
             # nx.draw_networkx(G)
             # plt.draw()
             # plt.show(block = False)
-            sa1 = sa(G, 100, 100)
             t = time.time()
-            gout, _, _ = sa1.simulated_annealing("number of edges")
+            gout, _, _ = edm_sa(G, 100, 100)            
             t_list.append(time.time()-t)
-            gout1, _, _ = sa1.simulated_annealing("number of edges", vertex_met=False)
+            gout1, _, _ = edm_sa(G, 100, 100, vertex_met=False)
             # print(time.time()-t)
             in_list.append(G.number_of_edges())#, "edges in original")
             out_list.append(gout.number_of_edges())#

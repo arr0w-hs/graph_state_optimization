@@ -1,5 +1,5 @@
 # Installation
-Package is available on pypi and can be installed with `pip install graphstate-opt`. 
+Package is available on pypi and can be installed with `pip install graphstate-opt`.
 
 # Optional additional requirements
 MOSEK could be used for solving the ILP formulation. MOSEK requires an additional step of download and activation of license file. Mosek can be installed via `pip install mosek` or `pip install "graphstate-opt[mosek]"`. Information about mosek license can be found here: <https://docs.mosek.com/11.0/licensing/quickstart.html>.

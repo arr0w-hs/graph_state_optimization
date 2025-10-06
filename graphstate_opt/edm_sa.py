@@ -11,7 +11,7 @@ import numpy as np
 import networkx as nx
 import time
 import pandas as pd
-from gsc import is_lc_equiv
+from typing import Optional
 
 def local_complementation(in_graph, vert):
     """function for local complementation at vertex 'vert'"""
@@ -92,18 +92,55 @@ def energy_func(in_graph, metric):
     return energy
 
 
-def edm_sa(input_graph, k_max, initial_temp,
-            metric= "edge_count", 
-            vertex_met = True, 
-            lc_test = False):
-    """func for implementing simulated annealing
-    g_best is the output graph
-    x_best is the list of palces where we act with local comp"""
+def edm_sa(in_graph: nx.Graph, k_max: int, initial_temp: float,
+            metric:Optional[str]= "edge_count", 
+            vertex_met: bool = True):
+    """
+    Find an approximate Minimum Edge Representative (MER) using simulated annealing.
+
+    The algorithm applies simulated annealing (SA) for a fixed number of iterations,
+    performing local complementations to reduce the chosen metric (by default, the
+    edge count). Optionally, vertices are selected using a heuristic (clustering
+    coefficient) or uniformly at random.
+
+    Parameters
+    ----------
+    in_graph : nx.Graph
+        Input graph whose MER is to be approximated.
+    k_max : int
+        Maximum number of simulated annealing iterations.
+    temp : float
+        Initial temperature for simulated annealing.
+    metric : str, optional
+        Metric to minimize. Defaults to "edge_count".
+        Use "connectivity" to minimize algebraic connectivity instead.
+    vertex_met : bool, optional
+        If True (default), choose the vertex for local complementation using a
+        heuristic (e.g., clustering coefficient). If False, choose vertices
+        uniformly at random.
+
+    Returns
+    -------
+    g_best : nx.Graph
+        The best (lowest-metric) graph encountered during SA (approximate MER).
+    edge_list_best : list of int
+        History of the best metric value after each iteration.
+        (If `metric="edge_count"`, these are best-so-far edge counts.)
+    x_list : list of int
+        The sequence of vertex indices (or IDs) where local complementation
+        was applied to move from the input graph toward the MER.
+
+    Notes
+    -----
+    - Local complementation is applied as the move operator.
+    - If `metric="connectivity"`, algebraic connectivity is evaluated at each step.
+      This can be more expensive than edge counting.
+    """
 
     temp = initial_temp
     transition_cutoff = 1
-    g_best = input_graph
-    graph = input_graph
+    g_best = in_graph
+    graph = in_graph
     y = energy_func(graph, metric)
     y_best = y
     edge_list_best = []
@@ -131,13 +168,6 @@ def edm_sa(input_graph, k_max, initial_temp,
         #temp = initial_temp/(k+2)
         transition_cutoff = k+1
 
-
-    if nx.is_connected(input_graph) and lc_test:
-        output = is_lc_equiv.are_lc_equiv(input_graph, g_best)
-        print(output)
-        if not output[0]:
-            print(output[0], "sa gave a non lc-equivalent output")
-
     edge_list_best = edge_list_best[:np.argmin(edge_list_best)+1]
     x_list = x_list[:np.argmin(edge_list_best)]
     x_list = x_list[::-1]
@@ -157,7 +187,7 @@ if __name__ == "__main__":
 
         G = nx.erdos_renyi_graph(10, 0.6)
 
-        for i in range(0, 27):
+        for i in range(0, 5):
             # G = rgs_graph(10)#, 5, True)
             kmax = 1000*i+50
             for j in range(1):

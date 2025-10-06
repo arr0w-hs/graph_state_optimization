@@ -4,6 +4,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import warnings
 import time
+from typing import Optional
 
 from graphstate_opt.edm_sa import edm_sa
 warnings.simplefilter(action='ignore', category=FutureWarning)  # this is called to suppress an annoying warning from networkx when running a version < 3.0
@@ -74,8 +75,8 @@ def reconstruct_thetap(thetap, n):
         for j in range(n):
             if i < j:
                 val = thetap[i, j].value
-                adj_matrix[i][j] = int(val+1/2)  # rounds values to 0 or 1
-                adj_matrix[j][i] = int(val+1/2)  # rounds values to 0 or 1
+                adj_matrix[i][j] = int((val+1/2).item())  # rounds values to 0 or 1
+                adj_matrix[j][i] = int((val+1/2).item())  # rounds values to 0 or 1
     rows, cols = np.where(adj_matrix == 1)
     edges = zip(rows.tolist(), cols.tolist())
     G = nx.Graph()
@@ -86,18 +87,50 @@ def reconstruct_thetap(thetap, n):
     return adj_matrix, G
 
 
-def edm_ilp(input_G, draw=False):
+def edm_ilp(in_graph: nx.Graph, solver: Optional[str] = None, draw: bool = False):
+    """
+    Find the Minimum Edge Representative (MER) for a given graph using ILP.
+
+    This function solves an Integer Linear Program (ILP)
+    to find the MER of an input NetworkX graph. It can use either the
+    default CVXPY solver or MOSEK (if licensed and installed).
+
+    Parameters
+    ----------
+    in_graph : nx.Graph
+        Input graph whose MER is to be found.
+    solver : str, optional
+        Solver to use. Defaults to None, which uses the default CVXPY solver.
+        Set to "mosek" to use the MOSEK solver (requires a valid MOSEK license).
+    draw : bool, optional
+        If True, visualize the input and resulting MER graph. Defaults to False.
+
+    Returns
+    -------
+    G : nx.Graph
+        MER graph obtained from the ILP.
+    problem.value : float
+        Number of edges in the MER graph (objective value).
+    runtime : float
+        Runtime of the ILP solver, in seconds.
+
+    Notes
+    -----
+    The function requires CVXPY to be installed. If using MOSEK, ensure that
+    a valid MOSEK license is available in the environment otherwise it will cause
+    en error.
+    """
 
     time1 = time.time()
     if draw:
         print("Plotting input graph")
-        positions = nx.spring_layout(input_G)
-        nx.draw(input_G, pos=positions)
+        positions = nx.spring_layout(in_graph)
+        nx.draw(in_graph, pos=positions)
         plt.show()
 
-    max_edges = input_G.number_of_edges()
-    min_edges = input_G.number_of_nodes()-1
-    theta = nx.adjacency_matrix(input_G)
+    max_edges = in_graph.number_of_edges()
+    min_edges = in_graph.number_of_nodes()-1
+    theta = nx.adjacency_matrix(in_graph)
     theta = np.asarray(theta.todense())
 
     # add check that adj matrix is square
@@ -144,16 +177,15 @@ def edm_ilp(input_G, draw=False):
         constraints_type3.append(ad_term + bc_term == 1)
         constraints_type4 += ad_constraints
         constraints_type4 += bc_constraints
-
-    #constraints_type5.append(num_edges <= max_edges)
-    #constraints_type6.append(min_edges <= num_edges)
+    
     # attempt to solve
     problem = cvx.Problem(cvx.Minimize(num_edges), [*constraints_type1, *constraints_type2,
                                                     *constraints_type3, *constraints_type4,])#*constraints_type5])
-    # if solver = "MOSEK":
-    # problem.solve(solver='MOSEK', mosek_params={'MSK_IPAR_MIO_HEURISTIC_LEVEL': 1})
-    # else:
-    problem.solve()
+    
+    if solver == "mosek":
+        problem.solve(solver='MOSEK', mosek_params={'MSK_IPAR_MIO_HEURISTIC_LEVEL': 1})
+    else:
+        problem.solve()
     if problem.status != "optimal":
         print(problem.status)
     
@@ -170,18 +202,19 @@ def edm_ilp(input_G, draw=False):
 
 #
 if __name__ == "__main__":
-
     x = []
     y = []
-    for j in range(5):
+    y2 = []
+    y3=[]
+    for j in range(19):
 
         n = 5
         p = 0.05*(j+1)
         x.append(p)
-        p = 0.6
+        # p = 0.6
         
         times=0
-        N = 5
+        N = 1
 
         in_edges = []
         sa_edges = []
@@ -201,20 +234,22 @@ if __name__ == "__main__":
             # print(len(G.edges()))
             _, num_edges,_ = edm_ilp(G, draw=False)
             ilp_edges.append(num_edges)
-            print(num_edges)
             time2 = time.time()
             times += time2-time1
             #print(time2-time1)
             #print(" ")
         print(times/N, "avg")
         y.append(times/N)
+        y2.append(np.average(in_edges))
+        y3.append(np.average(ilp_edges))
+    
     plt.figure()
     # plt.plot(x,y)
-    plt.plot(x, in_edges)
-    plt.plot(x, ilp_edges)
+    plt.plot(x, y2, label="Input edges")
+    plt.plot(x, y3, label = "ILP edges")
     # plt.plot(x, sa_edges)
     plt.ylabel('Number of edges')
-    plt.xlabel('Iteration')
-    plt.legend(["Initial edges", "ILP", "Simulated annealing"])
+    plt.xlabel('Probability')
+    plt.legend()
     plt.show()
     
