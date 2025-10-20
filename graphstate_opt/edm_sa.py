@@ -81,25 +81,29 @@ def vertex_choice(in_graph, transition_cutoff, k_max, vertex_met):
     return vertex
 
 
-def energy_func(in_graph, metric):
+def energy_func(in_graph, energy_metric):
     """function for calculating energy, num edges in this case"""
 
-    if metric == "edge_count":
+    if energy_metric == "edge_count":
         energy = in_graph.number_of_edges()
-    elif metric == "connectivity":
+    elif energy_metric == "connectivity":
         energy = nx.algebraic_connectivity(in_graph, method='lanczos')
+    elif energy_metric == "degree":
+        energy = in_graph.degree()
+        energy = [v for (_,v) in energy]
+        energy = min(energy)
 
     return energy
 
 
 def edm_sa(in_graph: nx.Graph, k_max: int, initial_temp: float,
-            metric:Optional[str]= "edge_count", 
+            energy_metric:Optional[str]= "edge_count", 
             vertex_met: bool = True):
     """
     Find an approximate Minimum Edge Representative (MER) using simulated annealing.
 
     The algorithm applies simulated annealing (SA) for a fixed number of iterations,
-    performing local complementations to reduce the chosen metric (by default, the
+    performing local complementations to reduce the chosen energy_metric (by default, the
     edge count). Optionally, vertices are selected using a heuristic (clustering
     coefficient) or uniformly at random.
 
@@ -111,9 +115,10 @@ def edm_sa(in_graph: nx.Graph, k_max: int, initial_temp: float,
         Maximum number of simulated annealing iterations.
     temp : float
         Initial temperature for simulated annealing.
-    metric : str, optional
-        Metric to minimize. Defaults to "edge_count".
+    energy_metric : str, optional
+        energy_metric to minimize. Defaults to "edge_count".
         Use "connectivity" to minimize algebraic connectivity instead.
+        Use "degree" to find an LC-equivalent graph with minimum value of min degree
     vertex_met : bool, optional
         If True (default), choose the vertex for local complementation using a
         heuristic (e.g., clustering coefficient). If False, choose vertices
@@ -122,10 +127,10 @@ def edm_sa(in_graph: nx.Graph, k_max: int, initial_temp: float,
     Returns
     -------
     g_best : nx.Graph
-        The best (lowest-metric) graph encountered during SA (approximate MER).
+        The best (lowest-energy_metric) graph encountered during SA (approximate MER).
     edge_list_best : list of int
-        History of the best metric value after each iteration.
-        (If `metric="edge_count"`, these are best-so-far edge counts.)
+        History of the best energy value after each iteration.
+        (If `energy_metric="edge_count"`, these are best-so-far graphs with low number of edges.)
     x_list : list of int
         The sequence of vertex indices (or IDs) where local complementation
         was applied to move from the input graph toward the MER.
@@ -133,7 +138,7 @@ def edm_sa(in_graph: nx.Graph, k_max: int, initial_temp: float,
     Notes
     -----
     - Local complementation is applied as the move operator.
-    - If `metric="connectivity"`, algebraic connectivity is evaluated at each step.
+    - If `energy_metric="connectivity"`, algebraic connectivity is evaluated at each step.
       This can be more expensive than edge counting.
     """
 
@@ -141,7 +146,7 @@ def edm_sa(in_graph: nx.Graph, k_max: int, initial_temp: float,
     transition_cutoff = 1
     g_best = in_graph
     graph = in_graph
-    y = energy_func(graph, metric)
+    y = energy_func(graph, energy_metric)
     y_best = y
     edge_list_best = []
     x_list = []
@@ -152,7 +157,7 @@ def edm_sa(in_graph: nx.Graph, k_max: int, initial_temp: float,
 
         #g_new = local_complementation(g, x_new)
         g_new = local_complementation(graph, x_new)
-        y_new = energy_func(g_new, metric)
+        y_new = energy_func(g_new, energy_metric)
 
         if y_new - y <= 0 or np.random.uniform(0,1,1) < np.exp(-1*(y_new - y)/temp):
             y = y_new
@@ -182,19 +187,27 @@ if __name__ == "__main__":
     out_list = []
     templist = []
     out_dict = {}
-    for k in range(10):
+    for k in range(1):
         print(k)
 
         G = nx.erdos_renyi_graph(10, 0.6)
 
-        for i in range(0, 5):
+        for i in range(0, 1):
             # G = rgs_graph(10)#, 5, True)
             kmax = 1000*i+50
             for j in range(1):
                 temp = 50
                 t = time.time()
-                gout, _, _ =  edm_sa(G, kmax, temp)
+                gout, _, _ =  edm_sa(G, kmax, temp, energy_metric="degree")
                 t_list.append(time.time()-t)
+                plt.figure()
+                nx.draw_networkx(G)
+                plt.draw()
+                plt.show(block = False)
+                plt.figure()
+                nx.draw_networkx(gout)
+                plt.draw()
+                plt.show(block = False)
 
                 in_list.append(G.number_of_edges())#, "edges in original")
                 out_list.append(gout.number_of_edges())#
