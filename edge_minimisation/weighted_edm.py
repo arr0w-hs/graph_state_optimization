@@ -1,9 +1,11 @@
 
 import sys
 import os
-from graphstate_opt.wedm_ilp import minimize_edges
+from graphstate_opt.wedm_ilp import wedm_ilp
 import networkx as nx
 import matplotlib.pyplot as plt
+import numpy as np
+
 
 sys.path.append(os.path.dirname(__file__))
 dir_name = os.path.dirname(__file__)
@@ -68,7 +70,7 @@ def create_network():
     W = nx.to_numpy_array(network)
     W[W==0] = 999
 
-    H, num_edges = minimize_edges(G, W=W, draw=False)
+    H, num_edges = wedm_ilp(G, W=W, draw=False)
     print(num_edges)
 
     nx.draw_networkx_edges(G, pos=cities, edge_color='r', width=8, alpha=0.5)
@@ -87,7 +89,7 @@ def create_network():
 
 
     # plt.savefig(dir_name+"/wedm_results/output" + ".pdf", dpi=800, format="pdf", bbox_inches = 'tight')
-    # plt.show()
+    plt.show()
 
     # print(dir_name)
 if __name__ == "__main__":

@@ -56,24 +56,6 @@ def edm_sa_ilp(G_in : nx.Graph, k_max : int, temp: float, solver: Optional[str] 
     a valid MOSEK license is available in the environment.
     """
 
-    """
-    function to find the MER for a given graph
-    using SA+ILP and ILP. this returns the statistics of
-    different algorithms
-    inputs: 
-        (1) graph to be minimised
-        (2) k_max: maximum number of iterations
-        (3) temp: initial temperature of the graph
-
-    outputs:
-        (1) output graph from SA+ILP
-        (2) output graph from SA
-        (3) number of edges in graph obtained from SA
-        (4) number of edges in graph obtained from SA+ILP
-        (5) runtime of SA+ILP
-        (6) runtime of ILP
-
-    """
     time1 = time.time()
     G_sa, y_list, _ = edm_sa(G_in, k_max, temp)
     sa_edges = (G_sa.number_of_edges())

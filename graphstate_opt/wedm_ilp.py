@@ -7,54 +7,6 @@ import warnings
 import time
 warnings.simplefilter(action='ignore', category=FutureWarning)  # this is called to suppress an annoying warning from networkx when running a version < 3.0
 
-#
-
-# def linearize(e1, e2):
-#     # print(type(e1), type(e2))
-#     if type(e1) is int and type(e2) is int:
-#         print("!!!!!!!!!!!")
-#         return e1*e2, []
-#     elif type(e1) is int:
-#         if e1 == 1:
-#             return e2, []
-#         else:
-#             return 0, []
-#     elif type(e2) is int:
-#         print("!!")
-#         if e2 == 1:
-#             return e1, []
-#         else:
-#             return 0, []
-#     else:
-#         e = cvx.Variable(1, boolean=True)
-#         constraint1 = (e <= e1)
-#         constraint2 = (e <= e2)
-#         constraint3 = (e >= e1 + e2 - 1)
-#         constraint4 = (e >= 0)
-#     return e, [constraint1, constraint2, constraint3, constraint4]
-
-
-# def linearize(e1, e2):
-#     # if False:
-#     #     pass
-#     #print("jj")
-#     if type(e1) is int or type(e2) is int:
-#         if type(e1) is int and e1 == 0:
-#             return 0, []
-#         elif type(e2) is int and e2 == 0:
-#             return 0, []
-#         elif type(e1) is int and e1 == 1:
-#             return e2, []
-#         elif type(e2) is int and e2 == 1:
-#             return e1, []
-#     else:
-#         e = cvx.Variable(1, boolean=True)
-#         constraint1 = (e <= e1)
-#         constraint2 = (e <= e2)
-#         constraint3 = (e >= e1 + e2 - 1)
-#         constraint4 = (e >= 0)
-#         return e, [constraint1, constraint2, constraint3, constraint4]
-
 def linearize(e1, e2):
     if type(e1) is int or type(e2) is int:
         return e2*e1, []
@@ -68,12 +20,13 @@ def linearize(e1, e2):
 
 
 def create_thetap(n, W):
-    # this function is used to cast the 1D list
-    # of selection variables into a more natural 2D matrix form
-    # Purely done for convenience/readability
-    # function also return the variable corresponding to the num of edges
-    # W is the graph whose edges correspond to the weights
-
+    """
+    this function is used to cast the 1D list
+    of selection variables into a more natural 2D matrix form
+    Purely done for convenience/readability
+    function also return the variable corresponding to the num of edges
+    W is the graph whose edges correspond to the weights
+    """
     matrix = dict()
     num_edges = 0
     for i in range(n):
@@ -109,13 +62,43 @@ def reconstruct_thetap(thetap, n):
     return adj_matrix, G
 
 
-def wedm_ilp(input_G, W=None, draw=False, export_only=False, filename=None):
-    if export_only and filename is None:
-        raise RuntimeError("Export only flag used, but no filename provided.")
-    if filename is not None and not export_only:
-        RuntimeWarning("Filename provided, but export only flag not used.")
-    if export_only and draw:
-        RuntimeWarning("Draw flag was set, but problem was not optimized since export_only was set as well.")
+def wedm_ilp(input_G, W=None, draw=False):#, export_only=False, filename=None):
+    """
+    Find the Minimum Edge Representative (MER) for a given graph using SA+ILP.
+
+    This function uses edm_sa as a preprocsssing step before solving the ILP
+    to find the MER of an input NetworkX graph. It can use either the
+    default CVXPY solver or MOSEK (if licensed and installed).
+
+    Parameters
+    ----------
+    input_G : nx.Graph
+        Input graph whose edge weights have to be minimised.
+    W : np.array, optional
+        Weights corresponding to each vertex
+        has to be an n by n symmetric matrix
+        if not specified, weights are assumed to be 1 each
+    draw : bool, optional
+        If True, visualize the input and resulting MER graph. Defaults to False.
+    Returns
+    -------
+    H : nx.Graph
+        Graph that minimises the sum of all the weights of edges
+    value : float
+        minimum value of the sum of weights
+
+    Notes
+    -----
+    The function requires CVXPY to be installed. If using MOSEK, ensure that
+    a valid MOSEK license is available in the environment.
+    """
+
+    # if export_only and filename is None:
+    #     raise RuntimeError("Export only flag used, but no filename provided.")
+    # if filename is not None and not export_only:
+    #     RuntimeWarning("Filename provided, but export only flag not used.")
+    # if export_only and draw:
+    #     RuntimeWarning("Draw flag was set, but problem was not optimized since export_only was set as well.")
 
     n = len(input_G.nodes())
     # W is the matrix of weights used for each edge
@@ -176,32 +159,31 @@ def wedm_ilp(input_G, W=None, draw=False, export_only=False, filename=None):
 
     problem = cvx.Problem(cvx.Minimize(num_edges), [*constraints_type1, *constraints_type2,
                                                         *constraints_type3, *constraints_type4])
-    if not export_only:
+    # if not export_only:
         # attempt to solve
-        time1 = time.time()
-        problem.solve(solver='MOSEK', mosek_params={'MSK_IPAR_MIO_HEURISTIC_LEVEL': 1,
-                                                    'MSK_IPAR_MIO_MAX_NUM_SOLUTIONS': 500})
-        time2 = time.time()
-        # print("Time diff = ", time2-time1)
-        # problem.solve()
-        if problem.status != "optimal":
-            print(problem.status)
+    problem.solve(solver='MOSEK', mosek_params={'MSK_IPAR_MIO_HEURISTIC_LEVEL': 1,
+                                                'MSK_IPAR_MIO_MAX_NUM_SOLUTIONS': 500})
+    # print("Time diff = ", time2-time1)
+    # problem.solve()
+    if problem.status != "optimal":
+        print(problem.status)
 
-        adj_matrix, G = reconstruct_thetap(thetap, n)
+    _, G = reconstruct_thetap(thetap, n)
 
-        if draw:
-            print("Plotting output graph")
-            nx.draw(G, pos=positions)
-            plt.show()
-        return G, problem.value
-    else:
-        # import pdb
-        # pdb.set_trace()
-        # problem.writedata(filename + ".task")
-        # x = problem.get_problem_data(solver='MOSEK')
-        # print(x)
+    if draw:
+        print("Plotting output graph")
+        nx.draw(G, pos=positions)
+        plt.show()
 
-        return None, "Problem exported."
+    return G, problem.value
+    # else:
+    #     # import pdb
+    #     # pdb.set_trace()
+    #     # problem.writedata(filename + ".task")
+    #     # x = problem.get_problem_data(solver='MOSEK')
+    #     # print(x)
+
+    #     return None, "Problem exported."
 
 
 

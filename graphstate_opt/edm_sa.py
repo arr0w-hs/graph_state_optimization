@@ -16,7 +16,7 @@ from typing import Optional
 def local_complementation(in_graph, vert):
     """function for local complementation at vertex 'vert'"""
     edge_list = list(in_graph.edges())
-    
+
     dim = in_graph.number_of_nodes()
     adj_mat = np.zeros([dim,dim])
 
@@ -97,7 +97,7 @@ def energy_func(in_graph, energy_metric):
 
 
 def edm_sa(in_graph: nx.Graph, k_max: int, initial_temp: float,
-            energy_metric:Optional[str]= "edge_count", 
+            energy_metric:Optional[str]= "edge_count",
             vertex_met: bool = True):
     """
     Find an approximate Minimum Edge Representative (MER) using simulated annealing.
@@ -233,11 +233,11 @@ if __name__ == "__main__":
                handlelength=1.3, handleheight=0.5, labelspacing = 0.15)
     plt.grid()
     # plt.savefig(dir_name +'/plots' + "metric_run2" + ".pdf", dpi=1000, format="pdf", bbox_inches = 'tight')
-    
+
     plt.show()
-    
+
     out_df = pd.DataFrame(out_dict)
     wide = out_df.groupby(['kmax'],as_index=False).mean()
-    
+
     # print(out_df)
     print(wide)
